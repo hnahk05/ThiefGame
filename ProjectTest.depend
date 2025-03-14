@@ -1,0 +1,53 @@
+# depslib dependency file v1.0
+1741880121 source:d:\codeblocks\thiefgame\main.cpp
+	"Engine.h"
+
+1741880187 d:\codeblocks\thiefgame\src\core\engine.h
+	"SDL.h"
+	"SDL_image.h"
+
+1741883101 source:d:\codeblocks\thiefgame\src\graphics\texturemanager.cpp
+	"TextureManager.h"
+	"Engine.h"
+
+1741880077 d:\codeblocks\thiefgame\src\graphics\texturemanager.h
+	<string>
+	"SDL.h"
+	<map>
+
+1741919820 source:d:\codeblocks\thiefgame\src\core\engine.cpp
+	"Engine.h"
+	"TextureManager.h"
+	"Warrior.h"
+
+1741879872 source:d:\codeblocks\thiefgame\src\physics\transform.cpp
+	"Transform.h"
+
+1741880970 d:\codeblocks\thiefgame\src\physics\transform.h
+	"Vector2D.h"
+
+1741879989 d:\codeblocks\thiefgame\src\physics\vector 2d.h
+	<iostream>
+
+1741880850 d:\codeblocks\thiefgame\src\physics\vector2d.h
+	<iostream>
+
+1741920184 source:d:\codeblocks\thiefgame\src\characters\warrior.cpp
+	"Warrior.h"
+	"TextureManager.h"
+	"SDL.h"
+
+1741919736 d:\codeblocks\thiefgame\src\characters\warrior.h
+	"Character.h"
+
+1741883989 d:\codeblocks\thiefgame\src\characters\character.h
+	"GameObject.h"
+
+1741885505 d:\codeblocks\thiefgame\src\object\gameobject.h
+	<SDL.h>
+	<SDL_render.h>
+	"IObject.h"
+	"Transform.h"
+
+1741881254 d:\codeblocks\thiefgame\src\object\iobject.h
+
