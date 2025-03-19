@@ -1,8 +1,8 @@
 #include "Thief.h"
 #include "defs.h"
 
-const int FRAME_WIDTH = 160;
-const int FRAME_HEIGHT = 160;
+const int FRAME_WIDTH = 192;
+const int FRAME_HEIGHT = 192;
 const int FRAME_COUNT = 2;
 
 SDL_Texture* backgroundTexture = nullptr;
@@ -92,7 +92,7 @@ void Thief::update() {
         frameDelay = 0;
     }
     srcRect.x = frameIndex * FRAME_WIDTH;
-    if (srcRect.x >= 320) srcRect.x = 0;
+    if (srcRect.x >= 384) srcRect.x = 0;
 
     // Xác định vùng trung tâm nhỏ để nhân vật có thể di chuyển
     const int centerX = SCREEN_WIDTH / 2 - FRAME_WIDTH / 2;

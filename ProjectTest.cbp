@@ -46,16 +46,16 @@
 			<Add directory="D:/CodeBlocks/ThiefGame/src/Characters" />
 		</Compiler>
 		<Unit filename="main.cpp" />
-		<Unit filename="src/Blackspot.cpp" />
-		<Unit filename="src/Blackspot.h" />
+		<Unit filename="src/DropPoint.cpp" />
+		<Unit filename="src/DropPoint.h" />
 		<Unit filename="src/GameFull.cpp" />
 		<Unit filename="src/GameFull.h" />
 		<Unit filename="src/Graphics.cpp" />
 		<Unit filename="src/Graphics.h" />
+		<Unit filename="src/House.cpp" />
+		<Unit filename="src/House.h" />
 		<Unit filename="src/Item.cpp" />
 		<Unit filename="src/Item.h" />
-		<Unit filename="src/Obstacle.cpp" />
-		<Unit filename="src/Obstacle.h" />
 		<Unit filename="src/Thief.cpp" />
 		<Unit filename="src/Thief.h" />
 		<Unit filename="src/defs.h" />
