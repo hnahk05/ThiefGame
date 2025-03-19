@@ -107,8 +107,9 @@
 	"Obstacle.h"
 	<SDL_image.h>
 
-1742381611 source:d:\codeblocks\thiefgame\src\thief.cpp
+1742382879 source:d:\codeblocks\thiefgame\src\thief.cpp
 	"Thief.h"
+	"defs.h"
 
 1742380370 d:\codeblocks\thiefgame\src\defs.h
 

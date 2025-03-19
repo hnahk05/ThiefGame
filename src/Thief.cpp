@@ -1,8 +1,8 @@
 #include "Thief.h"
 #include "defs.h"
 
-const int FRAME_WIDTH = 224;
-const int FRAME_HEIGHT = 224;
+const int FRAME_WIDTH = 160;
+const int FRAME_HEIGHT = 160;
 const int FRAME_COUNT = 2;
 
 Thief::Thief(SDL_Renderer* renderer)
@@ -84,7 +84,7 @@ void Thief::update() {
         frameDelay = 0;
     }
     srcRect.x = frameIndex * FRAME_WIDTH;
-    if (srcRect.x >= 448) srcRect.x = 0;
+    if (srcRect.x >= 320) srcRect.x = 0;
 
     if (movingLeft && dstRect.x > 0) dstRect.x -= 5;
     if (movingRight && dstRect.x + FRAME_WIDTH < SCREEN_WIDTH) dstRect.x += 5;
