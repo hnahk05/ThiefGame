@@ -1,4 +1,5 @@
 #include "Thief.h"
+#include "defs.h"
 
 const int FRAME_WIDTH = 224;
 const int FRAME_HEIGHT = 224;
@@ -47,11 +48,11 @@ void Thief::handleInput(const SDL_Event& event) {
                 movingLeft = movingUp = movingDown = false;
                 facingLeft = false;
                 break;
-            case SDLK_UP:  // ✅ Nhấn UP
+            case SDLK_UP:
                 movingUp = true;
                 movingLeft = movingRight = movingDown = false;
                 break;
-            case SDLK_DOWN: // ✅ Nhấn DOWN
+            case SDLK_DOWN:
                 movingDown = true;
                 movingLeft = movingRight = movingUp = false;
                 break;
@@ -85,10 +86,10 @@ void Thief::update() {
     srcRect.x = frameIndex * FRAME_WIDTH;
     if (srcRect.x >= 448) srcRect.x = 0;
 
-    if (movingLeft) dstRect.x -= 5;
-    if (movingRight) dstRect.x += 5;
-    if (movingUp) dstRect.y -= 5;
-    if (movingDown) dstRect.y += 5;
+    if (movingLeft && dstRect.x > 0) dstRect.x -= 5;
+    if (movingRight && dstRect.x + FRAME_WIDTH < SCREEN_WIDTH) dstRect.x += 5;
+    if (movingUp && dstRect.y > 0) dstRect.y -= 5;
+    if (movingDown && dstRect.y + FRAME_HEIGHT < SCREEN_HEIGHT) dstRect.y += 5;
 }
 
 void Thief::render(SDL_Renderer* renderer) {
