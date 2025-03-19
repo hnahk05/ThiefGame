@@ -1,15 +1,21 @@
-#include "Engine.h"
+#define SDL_MAIN_HANDLED // Giúp SDL không thay đổi hàm main() thành SDL_main().
+#include "SDL.h"
+#include "GameFull.h"
+#include <iostream>
 
-int main(int argc, char** argv){
-
-    Engine::GetInstance()->Init();
-
-    while(Engine::GetInstance()->IsRunning()){
-        Engine::GetInstance()->Events();
-        Engine::GetInstance()->Update();
-        Engine::GetInstance()->Render();
+int main() {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+        return 1;
     }
 
-    Engine::GetInstance()->Clean();
+    GameFull game;
+    if (!game.init()) {
+        SDL_Quit();
+        return 1;
+    }
+
+    game.run();
+
+    SDL_Quit();
     return 0;
 }

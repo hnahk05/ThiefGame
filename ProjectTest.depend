@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1741880121 source:d:\codeblocks\thiefgame\main.cpp
-	"Engine.h"
+1742380370 source:d:\codeblocks\thiefgame\main.cpp
+	"SDL.h"
+	"GameFull.h"
+	<iostream>
 
 1741880187 d:\codeblocks\thiefgame\src\core\engine.h
 	"SDL.h"
 	"SDL_image.h"
 
-1741883101 source:d:\codeblocks\thiefgame\src\graphics\texturemanager.cpp
+1741964866 source:d:\codeblocks\thiefgame\src\graphics\texturemanager.cpp
 	"TextureManager.h"
 	"Engine.h"
 
@@ -15,10 +17,10 @@
 	"SDL.h"
 	<map>
 
-1741919820 source:d:\codeblocks\thiefgame\src\core\engine.cpp
+1741965107 source:d:\codeblocks\thiefgame\src\core\engine.cpp
 	"Engine.h"
 	"TextureManager.h"
-	"Warrior.h"
+	"Thief.h"
 
 1741879872 source:d:\codeblocks\thiefgame\src\physics\transform.cpp
 	"Transform.h"
@@ -50,4 +52,76 @@
 	"Transform.h"
 
 1741881254 d:\codeblocks\thiefgame\src\object\iobject.h
+
+1741964866 source:d:\codeblocks\thiefgame\src\characters\thief.cpp
+	"Thief.h"
+	"TextureManager.h"
+	"SDL.h"
+
+1741963989 d:\codeblocks\thiefgame\src\characters\thief.h
+	"Character.h"
+
+1742380370 d:\codeblocks\thiefgame\src\gamefull.h
+	<SDL.h>
+	"Graphics.h"
+	"Thief.h"
+	"House.h"
+	"Item.h"
+	"DropPoint.h"
+
+1742381210 d:\codeblocks\thiefgame\src\thief.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+
+1742373272 d:\codeblocks\thiefgame\src\item.h
+	<SDL.h>
+
+1742304131 d:\codeblocks\thiefgame\src\blackspot.h
+	<SDL.h>
+
+1742304797 d:\codeblocks\thiefgame\src\obstacle.h
+	<SDL.h>
+
+1742373297 d:\codeblocks\thiefgame\src\graphics.h
+	<SDL.h>
+
+1742304134 source:d:\codeblocks\thiefgame\src\blackspot.cpp
+	"Blackspot.h"
+	<SDL_image.h>
+
+1742380873 source:d:\codeblocks\thiefgame\src\gamefull.cpp
+	"GameFull.h"
+	<iostream>
+	<SDL_image.h>
+
+1742373555 source:d:\codeblocks\thiefgame\src\graphics.cpp
+	"Graphics.h"
+	"defs.h"
+	<iostream>
+
+1742373427 source:d:\codeblocks\thiefgame\src\item.cpp
+	"Item.h"
+
+1742304805 source:d:\codeblocks\thiefgame\src\obstacle.cpp
+	"Obstacle.h"
+	<SDL_image.h>
+
+1742381017 source:d:\codeblocks\thiefgame\src\thief.cpp
+	"Thief.h"
+
+1742380370 d:\codeblocks\thiefgame\src\defs.h
+
+1742373439 source:d:\codeblocks\thiefgame\src\droppoint.cpp
+	"DropPoint.h"
+
+1742373283 d:\codeblocks\thiefgame\src\droppoint.h
+	<SDL.h>
+
+1742373413 source:d:\codeblocks\thiefgame\src\house.cpp
+	"House.h"
+
+1742373259 d:\codeblocks\thiefgame\src\house.h
+	<vector>
+	<SDL.h>
 
