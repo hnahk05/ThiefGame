@@ -69,7 +69,7 @@
 	"Item.h"
 	"DropPoint.h"
 
-1742381210 d:\codeblocks\thiefgame\src\thief.h
+1742384521 d:\codeblocks\thiefgame\src\thief.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
@@ -107,11 +107,11 @@
 	"Obstacle.h"
 	<SDL_image.h>
 
-1742382879 source:d:\codeblocks\thiefgame\src\thief.cpp
+1742390388 source:d:\codeblocks\thiefgame\src\thief.cpp
 	"Thief.h"
 	"defs.h"
 
-1742380370 d:\codeblocks\thiefgame\src\defs.h
+1742391375 d:\codeblocks\thiefgame\src\defs.h
 
 1742373439 source:d:\codeblocks\thiefgame\src\droppoint.cpp
 	"DropPoint.h"

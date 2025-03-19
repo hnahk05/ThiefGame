@@ -9,6 +9,7 @@ class Thief {
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, dstRect;
+    SDL_Rect camera;
     SDL_Renderer* renderer;
     int frameIndex;
     int frameDelay;
