@@ -3,7 +3,12 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include "Item.h"
+
 #include <iostream>
+#include <vector>
+using namespace std;
+
 
 class Thief {
 private:
@@ -18,11 +23,12 @@ private:
     bool movingUp = false;
     bool movingDown = false;
     bool facingLeft;
+    vector<Item> items; // Danh sách vật phẩm
 
 public:
     Thief(SDL_Renderer* renderer);
     ~Thief();
-
+    bool checkCollision(const SDL_Rect&, const Item&);
     void handleInput(const SDL_Event& event);
     void update();
     void render(SDL_Renderer* renderer);

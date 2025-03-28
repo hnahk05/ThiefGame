@@ -10,4 +10,8 @@ const int HOUSE_WIDTH = 400;
 const int HOUSE_HEIGHT = 300;
 const int DOG_ALERT_LIMIT = 100;
 
+//Vị trí nhân vật sẽ xuất hiện:
+const int startX = 300;
+const int startY = 670;
+
 #endif

@@ -1,14 +1,36 @@
 #include "Item.h"
 
-Item::Item(int id, int x, int y) : id(id), isCarried(false) {
-    position = {x, y, 30, 30};
+#include <cstdio>
+
+Item::Item(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h) {
+    // Load ảnh của Item
+    SDL_Surface* loadedSurface = IMG_Load(imagePath);
+    if (!loadedSurface) {
+        printf("Không thể load ảnh %s! SDL_Error: %s\n", imagePath, SDL_GetError());
+        texture = nullptr;
+        return;
+    }
+
+    texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+    SDL_FreeSurface(loadedSurface);
+
+    // Đặt vị trí và kích thước
+    rect = { x, y, w, h };
 }
 
-void Item::render(SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-    SDL_RenderFillRect(renderer, &position);
+Item::Item(int x, int y, int w, int h) {
+    texture = nullptr; // Không có ảnh
+    rect = { x, y, w, h }; // Set position and size directly
 }
 
-SDL_Rect Item::getPosition() {
-    return position;
+Item::~Item() {
+    if (texture) {
+        SDL_DestroyTexture(texture);
+    }
+}
+
+void Item::render(SDL_Renderer* renderer) {
+    if (texture) {
+        SDL_RenderCopy(renderer, texture, nullptr, &rect);
+    }
 }

@@ -45,6 +45,10 @@
 			<Add option="-fexceptions" />
 			<Add directory="D:/CodeBlocks/ThiefGame/src/Characters" />
 		</Compiler>
+		<Linker>
+			<Add library="SDL2main" />
+			<Add library="SDL2" />
+		</Linker>
 		<Unit filename="main.cpp" />
 		<Unit filename="src/DropPoint.cpp" />
 		<Unit filename="src/DropPoint.h" />

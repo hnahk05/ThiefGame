@@ -33,6 +33,25 @@ void Graphics::clear() {
     SDL_RenderClear(renderer);
 }
 
+int noiseLevel = 0;
+//vẽ thanh tiếng ồn
+void Graphics::drawNoiseBar(SDL_Renderer* renderer) {
+    // Vẽ viền đen
+    SDL_Rect borderRect = { 48, 18, 204, 24 }; // Lớn hơn thanh tiếng ồn 2px mỗi bên
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &borderRect);
+
+    // Vẽ thanh nền
+    SDL_Rect barBackground = { 50, 20, 200, 20 };
+    SDL_SetRenderDrawColor(renderer, 205, 92, 92, 255);
+    SDL_RenderFillRect(renderer, &barBackground);
+
+    // Vẽ thanh tiến trình
+    SDL_Rect noiseBar = { 50, 20, 2 * noiseLevel, 20 };
+    SDL_SetRenderDrawColor(renderer, 218, 165, 32, 255);
+    SDL_RenderFillRect(renderer, &noiseBar);
+}
+
 void Graphics::present() {
     SDL_RenderPresent(renderer);
 }
@@ -40,3 +59,4 @@ void Graphics::present() {
 SDL_Renderer* Graphics::getRenderer() {
     return renderer;
 }
+
