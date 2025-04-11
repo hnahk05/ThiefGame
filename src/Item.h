@@ -11,7 +11,7 @@ private:
 
 public:
     Item(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h);
-    Item(int x, int y, int w, int h);  // Modified constructor with 4 parameters
+    Item(int x, int y, int w, int h);
     ~Item();
 
     SDL_Rect getRect() const { return rect; } // Lấy vùng chữ nhật của Item

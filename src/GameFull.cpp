@@ -13,8 +13,23 @@ bool GameFull::init() {
         return false;
     }
 
+    //Khởi tạo các bức tường
+    items.emplace_back(452, 367, 32, 243);
+    items.emplace_back(452, 367, 437, 130);
+    items.emplace_back(856, 467, 100, 142);
+    items.emplace_back(918, 254, 695, 149);
+    items.emplace_back(1582, 254, 32, 704);
+    items.emplace_back(1349, 958, 264, 241);
+    items.emplace_back(1618, 1011, 95, 219);
+    items.emplace_back(1680, 1009, 538, 105);
+    items.emplace_back(2187, 1008, 28, 560);
+    items.emplace_back(905, 1028, 31, 635);
+    items.emplace_back(908, 960, 280, 169);
+    items.emplace_back(451, 935, 36, 190);
+
+
     // Khởi tạo các vật phẩm với vị trí và kích thước
-    items.emplace_back(400, 300, 50, 50);
+
 
     // Khởi tạo các điểm thả vật phẩm
     dropPoints.emplace_back(500, 300, 1);

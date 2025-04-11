@@ -12,23 +12,26 @@ SDL_Texture* backgroundTexture = nullptr;
 Thief::Thief(SDL_Renderer* renderer)
     : renderer(renderer), frameIndex(0), frameDelay(0),
       movingLeft(false), movingRight(false), movingUp(false), movingDown(false),
-      facingLeft(false), texture(nullptr) {
+      facingLeft(false), texture(nullptr), foregroundTexture(nullptr) {
 
     camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
     SDL_Surface* bgSurface = IMG_Load("assets/background.png");
+    SDL_Surface* fgSurface = IMG_Load("assets/foreground.png");  // Load foreground
     std::string path = "assets/Thief.png";
     SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-    if (!loadedSurface||!bgSurface) {
+    if (!loadedSurface || !bgSurface || !fgSurface) {
         return;
     }
 
     texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
     backgroundTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
+    foregroundTexture = SDL_CreateTextureFromSurface(renderer, fgSurface);  // Create foreground texture
     SDL_FreeSurface(loadedSurface);
     SDL_FreeSurface(bgSurface);
+    SDL_FreeSurface(fgSurface);
 
-    if (!texture||!bgSurface) {
+    if (!texture || !backgroundTexture || !foregroundTexture) {
         return;
     }
 
@@ -36,7 +39,6 @@ Thief::Thief(SDL_Renderer* renderer)
 
     camera.x = startX - (SCREEN_WIDTH / 2 - FRAME_WIDTH / 2);
     camera.y = startY - (SCREEN_HEIGHT / 2 - FRAME_HEIGHT / 2);
-
 
     dstRect = {startX, startY, FRAME_WIDTH, FRAME_HEIGHT};
 
@@ -47,6 +49,9 @@ Thief::Thief(SDL_Renderer* renderer)
 Thief::~Thief() {
     if (texture) {
         SDL_DestroyTexture(texture);
+    }
+    if (foregroundTexture) {
+        SDL_DestroyTexture(foregroundTexture);
     }
 }
 
@@ -183,7 +188,7 @@ void Thief::update() {
 }
 
 void Thief::render(SDL_Renderer* renderer) {
-    if (!texture || !backgroundTexture) {
+    if (!texture || !backgroundTexture || !foregroundTexture) {
         return;
     }
 
@@ -201,6 +206,10 @@ void Thief::render(SDL_Renderer* renderer) {
 
     SDL_RendererFlip flip = facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
     SDL_RenderCopyEx(renderer, texture, &srcRect, &renderRect, 0, NULL, flip);
+
+    // Vẽ foreground với camera offset (sau nhân vật)
+    SDL_Rect fgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_RenderCopy(renderer, foregroundTexture, &fgRect, NULL);
 }
 
 
