@@ -14,7 +14,7 @@ public:
     Item(int x, int y, int w, int h);
     ~Item();
 
-    SDL_Rect getRect() const { return rect; } // Lấy vùng chữ nhật của Item
+    SDL_Rect getRect() const;
     void render(SDL_Renderer* renderer);
 };
 

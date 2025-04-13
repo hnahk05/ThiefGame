@@ -5,8 +5,13 @@
 const int FRAME_WIDTH = 192;
 const int FRAME_HEIGHT = 192;
 const int FRAME_COUNT = 2;
+const int COLLISION_OFFSET_X = 30;
+const int COLLISION_OFFSET_Y = 40;
+const int MOVE_SPEED = 4;
+const int CAMERA_SPEED = 4;
+const int MOVE_RANGE = 100;
 
-extern int noiseLevel; //Lưu tiếng ồn
+extern int noiseLevel;
 SDL_Texture* backgroundTexture = nullptr;
 
 Thief::Thief(SDL_Renderer* renderer)
@@ -17,7 +22,7 @@ Thief::Thief(SDL_Renderer* renderer)
     camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
     SDL_Surface* bgSurface = IMG_Load("assets/background.png");
-    SDL_Surface* fgSurface = IMG_Load("assets/foreground.png");  // Load foreground
+    SDL_Surface* fgSurface = IMG_Load("assets/foreground.png");
     std::string path = "assets/Thief.png";
     SDL_Surface* loadedSurface = IMG_Load(path.c_str());
     if (!loadedSurface || !bgSurface || !fgSurface) {
@@ -26,7 +31,7 @@ Thief::Thief(SDL_Renderer* renderer)
 
     texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
     backgroundTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
-    foregroundTexture = SDL_CreateTextureFromSurface(renderer, fgSurface);  // Create foreground texture
+    foregroundTexture = SDL_CreateTextureFromSurface(renderer, fgSurface);
     SDL_FreeSurface(loadedSurface);
     SDL_FreeSurface(bgSurface);
     SDL_FreeSurface(fgSurface);
@@ -37,13 +42,20 @@ Thief::Thief(SDL_Renderer* renderer)
 
     srcRect = {0, 0, FRAME_WIDTH, FRAME_HEIGHT};
 
+    // Initialize character position
+    dstRect = {startX, startY, FRAME_WIDTH, FRAME_HEIGHT};
+    
+    // Initialize collision rectangle
+    collisionRect = {
+        dstRect.x + COLLISION_OFFSET_X,
+        dstRect.y + COLLISION_OFFSET_Y,
+        dstRect.w - (2 * COLLISION_OFFSET_X),
+        dstRect.h - (2 * COLLISION_OFFSET_Y)
+    };
+
+    // Initialize camera position
     camera.x = startX - (SCREEN_WIDTH / 2 - FRAME_WIDTH / 2);
     camera.y = startY - (SCREEN_HEIGHT / 2 - FRAME_HEIGHT / 2);
-
-    dstRect = {startX, startY, FRAME_WIDTH, FRAME_HEIGHT};
-
-    SDL_RendererFlip flip = facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-    SDL_RenderCopyEx(renderer, texture, &srcRect, &dstRect, 0, NULL, flip);
 }
 
 Thief::~Thief() {
@@ -59,34 +71,22 @@ void Thief::handleInput(const SDL_Event& event) {
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
             case SDLK_LEFT:
-                if (!movingRight && !movingUp && !movingDown && !movingLeft) {
-                    movingLeft = true;
-                    movingRight = movingUp = movingDown = false;
-                    facingLeft = true;
-                }
+                movingLeft = true;
+                facingLeft = true;
                 break;
             case SDLK_RIGHT:
-                if (!movingLeft && !movingUp && !movingDown && !movingRight) {
-                    movingRight = true;
-                    movingLeft = movingUp = movingDown = false;
-                    facingLeft = false;
-                }
+                movingRight = true;
+                facingLeft = false;
                 break;
             case SDLK_UP:
-                if (!movingLeft && !movingRight && !movingDown && !movingUp) {
-                    movingUp = true;
-                    movingLeft = movingRight = movingDown = false;
-                }
+                movingUp = true;
                 break;
             case SDLK_DOWN:
-                if (!movingLeft && !movingRight && !movingUp && !movingDown) {
-                    movingDown = true;
-                    movingLeft = movingRight = movingUp = false;
-                }
+                movingDown = true;
                 break;
         }
     }
-    if (event.type == SDL_KEYUP) {
+    else if (event.type == SDL_KEYUP) {
         switch (event.key.keysym.sym) {
             case SDLK_LEFT:
                 movingLeft = false;
@@ -106,8 +106,6 @@ void Thief::handleInput(const SDL_Event& event) {
 
 bool Thief::checkCollision(const SDL_Rect& a, const Item& item) {
     SDL_Rect b = item.getRect();
-    b.x -= camera.x;
-    b.y -= camera.y;
     return (a.x < b.x + b.w && a.x + a.w > b.x &&
             a.y < b.y + b.h && a.y + a.h > b.y);
 }
@@ -122,67 +120,61 @@ void Thief::update() {
     srcRect.x = frameIndex * FRAME_WIDTH;
     if (srcRect.x >= 384) srcRect.x = 0;
 
-    // Xác định vùng trung tâm nhỏ để nhân vật có thể di chuyển
     const int centerX = SCREEN_WIDTH / 2 - FRAME_WIDTH / 2;
     const int centerY = SCREEN_HEIGHT / 2 - FRAME_HEIGHT / 2;
-    const int moveRange = 100;  // Tăng phạm vi di chuyển lên 100px
-    const int moveSpeed = 4;
 
-    // Di chuyển nhân vật trong vùng nhỏ - chỉ cho phép một hướng di chuyển tại một thời điểm
-    if (movingLeft) {
-        nextPos.x -= moveSpeed;
-        nextPos.y = dstRect.y; // Giữ nguyên vị trí y
-    }
-    else if (movingRight) {
-        nextPos.x += moveSpeed;
-        nextPos.y = dstRect.y; // Giữ nguyên vị trí y
-    }
-    else if (movingUp) {
-        nextPos.y -= moveSpeed;
-        nextPos.x = dstRect.x; // Giữ nguyên vị trí x
-    }
-    else if (movingDown) {
-        nextPos.y += moveSpeed;
-        nextPos.x = dstRect.x; // Giữ nguyên vị trí x
-    }
+    // Calculate next position based on movement
+    if (movingLeft) nextPos.x -= MOVE_SPEED;
+    if (movingRight) nextPos.x += MOVE_SPEED;
+    if (movingUp) nextPos.y -= MOVE_SPEED;
+    if (movingDown) nextPos.y += MOVE_SPEED;
 
-    // Tính toán vị trí tương đối của nhân vật so với tâm màn hình
+    // Calculate relative position of character to screen center
     int relativeX = nextPos.x - (centerX + camera.x);
     int relativeY = nextPos.y - (centerY + camera.y);
 
-    // Di chuyển camera khi nhân vật vượt quá vùng cho phép
-    if (relativeX > moveRange) {
-        camera.x = std::min(BACKGROUND_WIDTH - SCREEN_WIDTH, camera.x + moveSpeed);
-        nextPos.x = centerX + moveRange + camera.x;
+    // Move camera when character exceeds movement range
+    if (relativeX > MOVE_RANGE) {
+        camera.x = std::min(BACKGROUND_WIDTH - SCREEN_WIDTH, camera.x + CAMERA_SPEED);
+        nextPos.x = centerX + MOVE_RANGE + camera.x;
     }
-    else if (relativeX < -moveRange) {
-        camera.x = std::max(0, camera.x - moveSpeed);
-        nextPos.x = centerX - moveRange + camera.x;
-    }
-
-    if (relativeY > moveRange) {
-        camera.y = std::min(BACKGROUND_HEIGHT - SCREEN_HEIGHT, camera.y + moveSpeed);
-        nextPos.y = centerY + moveRange + camera.y;
-    }
-    else if (relativeY < -moveRange) {
-        camera.y = std::max(0, camera.y - moveSpeed);
-        nextPos.y = centerY - moveRange + camera.y;
+    else if (relativeX < -MOVE_RANGE) {
+        camera.x = std::max(0, camera.x - CAMERA_SPEED);
+        nextPos.x = centerX - MOVE_RANGE + camera.x;
     }
 
-    // Kiểm tra va chạm với các vật phẩm
+    if (relativeY > MOVE_RANGE) {
+        camera.y = std::min(BACKGROUND_HEIGHT - SCREEN_HEIGHT, camera.y + CAMERA_SPEED);
+        nextPos.y = centerY + MOVE_RANGE + camera.y;
+    }
+    else if (relativeY < -MOVE_RANGE) {
+        camera.y = std::max(0, camera.y - CAMERA_SPEED);
+        nextPos.y = centerY - MOVE_RANGE + camera.y;
+    }
+
+    // Update collision rectangle for the next position
+    SDL_Rect nextCollisionRect = {
+        nextPos.x + COLLISION_OFFSET_X,
+        nextPos.y + COLLISION_OFFSET_Y,
+        nextPos.w - (2 * COLLISION_OFFSET_X),
+        nextPos.h - (2 * COLLISION_OFFSET_Y)
+    };
+
+    // Check collisions with walls
     bool isColliding = false;
     for (auto& item : items) {
-        if (checkCollision(nextPos, item)) {
+        if (checkCollision(nextCollisionRect, item)) {
             isColliding = true;
             break;
         }
     }
 
-    // Nếu không có va chạm, cập nhật vị trí
+    // Only update position if no collision
     if (!isColliding) {
         dstRect = nextPos;
+        collisionRect = nextCollisionRect;
     } else {
-        noiseLevel += 5; // Va chạm thì tăng tiếng ồn
+        noiseLevel += 5;
         if (noiseLevel > 100) noiseLevel = 100;
     }
 }
@@ -192,11 +184,11 @@ void Thief::render(SDL_Renderer* renderer) {
         return;
     }
 
-    // Vẽ background với camera offset
+    // Draw background
     SDL_Rect bgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
     SDL_RenderCopy(renderer, backgroundTexture, &bgRect, NULL);
 
-    // Vẽ nhân vật với vị trí tương đối so với camera
+    // Draw character
     SDL_Rect renderRect = {
         dstRect.x - camera.x,
         dstRect.y - camera.y,
@@ -207,9 +199,12 @@ void Thief::render(SDL_Renderer* renderer) {
     SDL_RendererFlip flip = facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
     SDL_RenderCopyEx(renderer, texture, &srcRect, &renderRect, 0, NULL, flip);
 
-    // Vẽ foreground với camera offset (sau nhân vật)
+    // Draw foreground
     SDL_Rect fgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
     SDL_RenderCopy(renderer, foregroundTexture, &fgRect, NULL);
 }
 
+SDL_Rect Thief::getRect() const {
+    return dstRect;
+}
 

@@ -18,9 +18,9 @@ Item::Item(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, i
     rect = { x, y, w, h };
 }
 
-Item::Item(int x, int y, int w, int h) {
-    texture = nullptr; // Không có ảnh
-    rect = { x, y, w, h }; // Set position and size directly
+
+SDL_Rect Item::getRect() const {
+    return SDL_Rect{ x, y, w, h };
 }
 
 Item::~Item() {

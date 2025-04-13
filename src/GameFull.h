@@ -11,12 +11,16 @@
 class GameFull {
 private:
     bool running;
+    bool gameStarted;
     Graphics graphics;
     Thief* thief;
     House house;
     std::vector<Item> items;
     std::vector<DropPoint> dropPoints;
     int dogAlert;
+    SDL_Texture* startScreenTexture;
+    SDL_Texture* playButtonTexture;
+    SDL_Rect playButtonRect;
 
 public:
     GameFull();
@@ -25,6 +29,14 @@ public:
             delete thief;
             thief = nullptr;
         }
+        if (startScreenTexture) {
+            SDL_DestroyTexture(startScreenTexture);
+            startScreenTexture = nullptr;
+        }
+        if (playButtonTexture) {
+            SDL_DestroyTexture(playButtonTexture);
+            playButtonTexture = nullptr;
+        }
     }
     bool init();
     void run();
@@ -32,6 +44,8 @@ public:
     void update();
     void render();
     void clean();
+    void renderStartScreen();
+    bool isPointInRect(int x, int y, const SDL_Rect& rect);
 };
 
 #endif

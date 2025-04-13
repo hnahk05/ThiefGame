@@ -25,6 +25,7 @@ private:
     bool movingDown = false;
     bool facingLeft;
     vector<Item> items; // Danh sách vật phẩm
+    SDL_Rect collisionRect;  // Rectangle for collision detection
 
 public:
     Thief(SDL_Renderer* renderer);
@@ -33,6 +34,7 @@ public:
     void handleInput(const SDL_Event& event);
     void update();
     void render(SDL_Renderer* renderer);
+    SDL_Rect getRect() const;
 };
 
 #endif
