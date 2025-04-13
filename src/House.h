@@ -10,6 +10,7 @@ private:
 
 public:
     House();
+    House(int x, int y, int width, int height);
     void loadHouse(); // Tạo đồ đạc
     bool checkCollision(SDL_Rect &rect);
     void render(SDL_Renderer *renderer);

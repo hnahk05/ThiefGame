@@ -1,7 +1,12 @@
 #include "House.h"
 #include "defs.h"
 
+int x, y, width, height;
 House::House() {
+    x = 0;
+    y = 0;
+    width = 0;
+    height = 0;
     loadHouse();
 }
 
@@ -36,7 +41,6 @@ void House::render(SDL_Renderer *renderer) {
         SDL_RenderFillRect(renderer, &obj);
     }
 }
-
 
 SDL_Rect House::getRect() const {
     return SDL_Rect{ x, y, width, height };
