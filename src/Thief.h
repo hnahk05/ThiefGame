@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Item.h"
+#include "House.h" //kiểm tra va chạm với tường và đồ trong nhà
 
 #include <iostream>
 #include <vector>
@@ -32,7 +33,7 @@ public:
     ~Thief();
     bool checkCollision(const SDL_Rect&, const Item&);
     void handleInput(const SDL_Event& event);
-    void update();
+    void update(House& House);
     void render(SDL_Renderer* renderer);
     SDL_Rect getRect() const;
 };

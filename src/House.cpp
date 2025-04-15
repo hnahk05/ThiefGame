@@ -1,47 +1,42 @@
 #include "House.h"
 #include "defs.h"
+#include <SDL_image.h>
 
-int x, y, width, height;
 House::House() {
-    x = 0;
-    y = 0;
-    width = 0;
-    height = 0;
-    loadHouse();
-}
-
-void House::loadHouse() {
-    // Add all wall coordinates
-    furniture.push_back({452, 367, 32, 243});
-    furniture.push_back({452, 367, 437, 130});
-    furniture.push_back({856, 467, 100, 142});
-    furniture.push_back({918, 254, 695, 149});
-    furniture.push_back({1582, 254, 32, 704});
-    furniture.push_back({1349, 958, 264, 241});
-    furniture.push_back({1618, 1011, 95, 219});
-    furniture.push_back({1680, 1009, 538, 105});
-    furniture.push_back({2187, 1008, 28, 560});
-    furniture.push_back({905, 1028, 31, 635});
-    furniture.push_back({908, 960, 280, 169});
-    furniture.push_back({451, 935, 36, 190});
-}
-
-bool House::checkCollision(SDL_Rect &rect) {
-    for (const auto &obj : furniture) {
-        if (SDL_HasIntersection(&rect, &obj)) {
-            return true;
-        }
+    maskSurface = IMG_Load("assets/maskground.png");
+    if (!maskSurface) {
+        SDL_Log("Failed to load collision mask: %s", IMG_GetError());
     }
-    return false;
+
 }
 
-void House::render(SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); // Gray color for walls
-    for (const auto &obj : furniture) {
-        SDL_RenderFillRect(renderer, &obj);
+House::~House() {
+    SDL_FreeSurface(maskSurface);
+}
+
+Uint32 House::getPixel(int x, int y) {
+    int bpp = maskSurface->format->BytesPerPixel;
+    Uint8* p = (Uint8*)maskSurface->pixels + y * maskSurface->pitch + x * bpp;
+
+    switch (bpp) {
+        case 1: return *p;
+        case 2: return *(Uint16*)p;
+        case 3:
+            if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                return p[0] << 16 | p[1] << 8 | p[2];
+            else
+                return p[0] | p[1] << 8 | p[2] << 16;
+        case 4: return *(Uint32*)p;
+        default: return 0;
     }
 }
 
-SDL_Rect House::getRect() const {
-    return SDL_Rect{ x, y, width, height };
+bool House::isColliding(int x, int y) {
+    if (!maskSurface || x < 0 || y < 0 || x >= maskSurface->w || y >= maskSurface->h) return true;
+
+    Uint32 pixel = getPixel(x, y);
+    Uint8 r, g, b;
+    SDL_GetRGB(pixel, maskSurface->format, &r, &g, &b);
+
+    return (r == 0 && g == 0 && b == 0);  // màu đen là va chạm
 }

@@ -44,7 +44,7 @@ Thief::Thief(SDL_Renderer* renderer)
 
     // Initialize character position
     dstRect = {startX, startY, FRAME_WIDTH, FRAME_HEIGHT};
-    
+
     // Initialize collision rectangle
     collisionRect = {
         dstRect.x + COLLISION_OFFSET_X,
@@ -110,7 +110,7 @@ bool Thief::checkCollision(const SDL_Rect& a, const Item& item) {
             a.y < b.y + b.h && a.y + a.h > b.y);
 }
 
-void Thief::update() {
+void Thief::update(House& house) {
     SDL_Rect nextPos = dstRect;
     frameDelay++;
     if (frameDelay >= 10) {
@@ -123,22 +123,18 @@ void Thief::update() {
     const int centerX = SCREEN_WIDTH / 2 - FRAME_WIDTH / 2;
     const int centerY = SCREEN_HEIGHT / 2 - FRAME_HEIGHT / 2;
 
-    // Calculate next position based on movement
     if (movingLeft) nextPos.x -= MOVE_SPEED;
     if (movingRight) nextPos.x += MOVE_SPEED;
     if (movingUp) nextPos.y -= MOVE_SPEED;
     if (movingDown) nextPos.y += MOVE_SPEED;
 
-    // Calculate relative position of character to screen center
     int relativeX = nextPos.x - (centerX + camera.x);
     int relativeY = nextPos.y - (centerY + camera.y);
 
-    // Move camera when character exceeds movement range
     if (relativeX > MOVE_RANGE) {
         camera.x = std::min(BACKGROUND_WIDTH - SCREEN_WIDTH, camera.x + CAMERA_SPEED);
         nextPos.x = centerX + MOVE_RANGE + camera.x;
-    }
-    else if (relativeX < -MOVE_RANGE) {
+    } else if (relativeX < -MOVE_RANGE) {
         camera.x = std::max(0, camera.x - CAMERA_SPEED);
         nextPos.x = centerX - MOVE_RANGE + camera.x;
     }
@@ -146,13 +142,11 @@ void Thief::update() {
     if (relativeY > MOVE_RANGE) {
         camera.y = std::min(BACKGROUND_HEIGHT - SCREEN_HEIGHT, camera.y + CAMERA_SPEED);
         nextPos.y = centerY + MOVE_RANGE + camera.y;
-    }
-    else if (relativeY < -MOVE_RANGE) {
+    } else if (relativeY < -MOVE_RANGE) {
         camera.y = std::max(0, camera.y - CAMERA_SPEED);
         nextPos.y = centerY - MOVE_RANGE + camera.y;
     }
 
-    // Update collision rectangle for the next position
     SDL_Rect nextCollisionRect = {
         nextPos.x + COLLISION_OFFSET_X,
         nextPos.y + COLLISION_OFFSET_Y,
@@ -160,16 +154,24 @@ void Thief::update() {
         nextPos.h - (2 * COLLISION_OFFSET_Y)
     };
 
-    // Check collisions with walls
+    // === Kiểm tra va chạm bằng mask ===
     bool isColliding = false;
-    for (auto& item : items) {
-        if (checkCollision(nextCollisionRect, item)) {
+
+    // Chọn các điểm để kiểm tra va chạm, ví dụ 4 góc
+    int pointsToCheck[4][2] = {
+        { nextCollisionRect.x, nextCollisionRect.y },
+        { nextCollisionRect.x + nextCollisionRect.w - 1, nextCollisionRect.y },
+        { nextCollisionRect.x, nextCollisionRect.y + nextCollisionRect.h - 1 },
+        { nextCollisionRect.x + nextCollisionRect.w - 1, nextCollisionRect.y + nextCollisionRect.h - 1 }
+    };
+
+    for (int i = 0; i < 4; ++i) {
+        if (house.isColliding(pointsToCheck[i][0], pointsToCheck[i][1])) {
             isColliding = true;
             break;
         }
     }
 
-    // Only update position if no collision
     if (!isColliding) {
         dstRect = nextPos;
         collisionRect = nextCollisionRect;
@@ -207,4 +209,3 @@ void Thief::render(SDL_Renderer* renderer) {
 SDL_Rect Thief::getRect() const {
     return dstRect;
 }
-

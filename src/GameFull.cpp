@@ -130,10 +130,10 @@ bool checkCollision(SDL_Rect a, SDL_Rect b) {
     return true;
 }
 
-
+House House;
 void GameFull::update() {
     if (gameStarted) {
-        thief->update();
+        thief->update(House);
     }
     SDL_Rect thiefRect = thief->getRect();
 

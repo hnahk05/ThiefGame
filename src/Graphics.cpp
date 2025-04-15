@@ -59,4 +59,3 @@ void Graphics::present() {
 SDL_Renderer* Graphics::getRenderer() {
     return renderer;
 }
-

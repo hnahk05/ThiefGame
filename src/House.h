@@ -6,15 +6,14 @@
 
 class House {
 private:
-    std::vector<SDL_Rect> furniture; // Các đồ đạc trong nhà
+    SDL_Surface* maskSurface;
+    Uint32 getPixel(int x, int y);
 
 public:
     House();
-    House(int x, int y, int width, int height);
-    void loadHouse(); // Tạo đồ đạc
-    bool checkCollision(SDL_Rect &rect);
-    void render(SDL_Renderer *renderer);
-    SDL_Rect getRect() const;
+    ~House();
+
+    bool isColliding(int x, int y);
 };
 
 #endif
