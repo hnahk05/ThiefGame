@@ -16,4 +16,16 @@ const int startY = 670;
 
 const int buttonWidth = 200;  // Adjust these values based on your play button image size
 const int buttonHeight = 100;
+
+
+//theif
+const int FRAME_WIDTH = 192;
+const int FRAME_HEIGHT = 192;
+const int FRAME_COUNT = 2;
+const int COLLISION_OFFSET_X = 20;
+const int COLLISION_OFFSET_Y = 40;
+const int MOVE_SPEED = 4;
+const int CAMERA_SPEED = 4;
+const int MOVE_RANGE = 100;
+
 #endif

@@ -2,15 +2,6 @@
 #include "defs.h"
 #include <vector>
 
-const int FRAME_WIDTH = 192;
-const int FRAME_HEIGHT = 192;
-const int FRAME_COUNT = 2;
-const int COLLISION_OFFSET_X = 30;
-const int COLLISION_OFFSET_Y = 40;
-const int MOVE_SPEED = 4;
-const int CAMERA_SPEED = 4;
-const int MOVE_RANGE = 100;
-
 extern int noiseLevel;
 SDL_Texture* backgroundTexture = nullptr;
 
@@ -204,6 +195,17 @@ void Thief::render(SDL_Renderer* renderer) {
     // Draw foreground
     SDL_Rect fgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
     SDL_RenderCopy(renderer, foregroundTexture, &fgRect, NULL);
+
+        // ====== DEBUG: Vẽ vùng va chạm ======
+    SDL_Rect debugRect = {
+        collisionRect.x - camera.x,
+        collisionRect.y - camera.y,
+        collisionRect.w,
+        collisionRect.h
+    };
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Màu đỏ
+    SDL_RenderDrawRect(renderer, &debugRect);
+
 }
 
 SDL_Rect Thief::getRect() const {
