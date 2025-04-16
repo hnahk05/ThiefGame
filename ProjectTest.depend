@@ -94,7 +94,7 @@
 	"Blackspot.h"
 	<SDL_image.h>
 
-1744732401 source:d:\codeblocks\thiefgame\src\gamefull.cpp
+1744788080 source:d:\codeblocks\thiefgame\src\gamefull.cpp
 	"GameFull.h"
 	<iostream>
 	<SDL_image.h>
@@ -113,7 +113,7 @@
 	"Obstacle.h"
 	<SDL_image.h>
 
-1744787438 source:d:\codeblocks\thiefgame\src\thief.cpp
+1744788257 source:d:\codeblocks\thiefgame\src\thief.cpp
 	"Thief.h"
 	"defs.h"
 	<vector>
@@ -126,7 +126,7 @@
 1742373283 d:\codeblocks\thiefgame\src\droppoint.h
 	<SDL.h>
 
-1744733713 source:d:\codeblocks\thiefgame\src\house.cpp
+1744788081 source:d:\codeblocks\thiefgame\src\house.cpp
 	"House.h"
 	"defs.h"
 	<SDL_image.h>
