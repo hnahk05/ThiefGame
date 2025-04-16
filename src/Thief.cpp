@@ -1,7 +1,7 @@
 #include "Thief.h"
 #include "defs.h"
 #include <vector>
-
+using namespace std;
 extern int noiseLevel;
 SDL_Texture* backgroundTexture = nullptr;
 
@@ -14,8 +14,7 @@ Thief::Thief(SDL_Renderer* renderer)
 
     SDL_Surface* bgSurface = IMG_Load("assets/background.png");
     SDL_Surface* fgSurface = IMG_Load("assets/foreground.png");
-    std::string path = "assets/Thief.png";
-    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+    SDL_Surface* loadedSurface = IMG_Load("assets/Thief.png");
     if (!loadedSurface || !bgSurface || !fgSurface) {
         return;
     }
@@ -123,18 +122,18 @@ void Thief::update(House& house) {
     int relativeY = nextPos.y - (centerY + camera.y);
 
     if (relativeX > MOVE_RANGE) {
-        camera.x = std::min(BACKGROUND_WIDTH - SCREEN_WIDTH, camera.x + CAMERA_SPEED);
+        camera.x = min(BACKGROUND_WIDTH - SCREEN_WIDTH, camera.x + CAMERA_SPEED);
         nextPos.x = centerX + MOVE_RANGE + camera.x;
     } else if (relativeX < -MOVE_RANGE) {
-        camera.x = std::max(0, camera.x - CAMERA_SPEED);
+        camera.x = max(0, camera.x - CAMERA_SPEED);
         nextPos.x = centerX - MOVE_RANGE + camera.x;
     }
 
     if (relativeY > MOVE_RANGE) {
-        camera.y = std::min(BACKGROUND_HEIGHT - SCREEN_HEIGHT, camera.y + CAMERA_SPEED);
+        camera.y = min(BACKGROUND_HEIGHT - SCREEN_HEIGHT, camera.y + CAMERA_SPEED);
         nextPos.y = centerY + MOVE_RANGE + camera.y;
     } else if (relativeY < -MOVE_RANGE) {
-        camera.y = std::max(0, camera.y - CAMERA_SPEED);
+        camera.y = max(0, camera.y - CAMERA_SPEED);
         nextPos.y = centerY - MOVE_RANGE + camera.y;
     }
 
@@ -148,18 +147,22 @@ void Thief::update(House& house) {
     // === Kiểm tra va chạm bằng mask ===
     bool isColliding = false;
 
-    // Chọn các điểm để kiểm tra va chạm, ví dụ 4 góc
-    int pointsToCheck[4][2] = {
-        { nextCollisionRect.x, nextCollisionRect.y },
-        { nextCollisionRect.x + nextCollisionRect.w - 1, nextCollisionRect.y },
-        { nextCollisionRect.x, nextCollisionRect.y + nextCollisionRect.h - 1 },
-        { nextCollisionRect.x + nextCollisionRect.w - 1, nextCollisionRect.y + nextCollisionRect.h - 1 }
-    };
-
-    for (int i = 0; i < 4; ++i) {
-        if (house.isColliding(pointsToCheck[i][0], pointsToCheck[i][1])) {
+    // Kiểm tra va chạm theo viền khung chữ nhật
+    for (int x = nextCollisionRect.x; x < nextCollisionRect.x + nextCollisionRect.w; ++x) {
+        if (house.isColliding(x, nextCollisionRect.y) ||  // cạnh trên
+            house.isColliding(x, nextCollisionRect.y + nextCollisionRect.h - 1)) {  // cạnh dưới
             isColliding = true;
             break;
+        }
+    }
+
+    if (!isColliding) {
+        for (int y = nextCollisionRect.y; y < nextCollisionRect.y + nextCollisionRect.h; ++y) {
+            if (house.isColliding(nextCollisionRect.x, y) ||  // cạnh trái
+                house.isColliding(nextCollisionRect.x + nextCollisionRect.w - 1, y)) {  // cạnh phải
+                isColliding = true;
+                break;
+            }
         }
     }
 
@@ -167,7 +170,7 @@ void Thief::update(House& house) {
         dstRect = nextPos;
         collisionRect = nextCollisionRect;
     } else {
-        noiseLevel += 5;
+        noiseLevel += 1;
         if (noiseLevel > 100) noiseLevel = 100;
     }
 }
@@ -195,16 +198,6 @@ void Thief::render(SDL_Renderer* renderer) {
     // Draw foreground
     SDL_Rect fgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
     SDL_RenderCopy(renderer, foregroundTexture, &fgRect, NULL);
-
-        // ====== DEBUG: Vẽ vùng va chạm ======
-    SDL_Rect debugRect = {
-        collisionRect.x - camera.x,
-        collisionRect.y - camera.y,
-        collisionRect.w,
-        collisionRect.h
-    };
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Màu đỏ
-    SDL_RenderDrawRect(renderer, &debugRect);
 
 }
 

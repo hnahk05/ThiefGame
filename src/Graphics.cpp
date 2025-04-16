@@ -38,18 +38,25 @@ int noiseLevel = 0;
 void Graphics::drawNoiseBar(SDL_Renderer* renderer) {
     // Vẽ viền đen
     SDL_Rect borderRect = { 48, 18, 204, 24 }; // Lớn hơn thanh tiếng ồn 2px mỗi bên
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 3, 8, 13, 255);
     SDL_RenderFillRect(renderer, &borderRect);
 
     // Vẽ thanh nền
     SDL_Rect barBackground = { 50, 20, 200, 20 };
-    SDL_SetRenderDrawColor(renderer, 205, 92, 92, 255);
+    SDL_SetRenderDrawColor(renderer, 75, 173, 218, 255);
     SDL_RenderFillRect(renderer, &barBackground);
 
-    // Vẽ thanh tiến trình
-    SDL_Rect noiseBar = { 50, 20, 2 * noiseLevel, 20 };
-    SDL_SetRenderDrawColor(renderer, 218, 165, 32, 255);
-    SDL_RenderFillRect(renderer, &noiseBar);
+    // Vẽ viền đen của thanh tiếng ồn
+    SDL_Rect noiseBorder = { 50, 20, 2 * noiseLevel, 20 };
+    SDL_SetRenderDrawColor(renderer, 10, 11, 15, 255);
+    SDL_RenderFillRect(renderer, &noiseBorder);
+
+    // Vẽ phần nhỏ hơn bên trong để tạo viền đen xung quanh
+    SDL_Rect noiseBar = { 51, 21, 2 * noiseLevel - 2, 18 };
+    if (noiseBar.w > 0) { // Tránh vẽ khi width < 0
+        SDL_SetRenderDrawColor(renderer, 252, 252, 252, 255);
+        SDL_RenderFillRect(renderer, &noiseBar);
+    }
 }
 
 void Graphics::present() {
