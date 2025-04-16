@@ -1,21 +1,30 @@
-#ifndef ITEM_H
-#define ITEM_H
-
+#pragma once
 #include <SDL.h>
 #include <SDL_image.h>
 
-class Item {
-private:
-    SDL_Rect rect;       // Vị trí và kích thước của Item
-    SDL_Texture* texture; // Ảnh của Item
-
-public:
-    Item(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h);
-    Item(int x, int y, int w, int h);
-    ~Item();
-
-    SDL_Rect getRect() const;
-    void render(SDL_Renderer* renderer);
+enum ItemType {
+    ITEM_ALCOHOL,
+    ITEM_CLOCK,
+    ITEM_COMPUTER,
+    ITEM_MONEY,
+    ITEM_PHONE,
+    ITEM_TYPE_COUNT
 };
 
-#endif
+class Item {
+public:
+    Item(SDL_Renderer* renderer, int x, int y, ItemType type);
+    ~Item();
+
+    void render(SDL_Renderer* renderer, const SDL_Rect& camera);
+    SDL_Rect getRect() const;
+    ItemType getType() const;
+    bool isCollected() const;
+    void collect();
+
+private:
+    SDL_Texture* texture;
+    SDL_Rect rect;
+    ItemType type;
+    bool collected;
+};

@@ -1,41 +1,39 @@
 #include "Item.h"
+using namespace std;
 
-#include <cstdio>
+const char* itemPaths[ITEM_TYPE_COUNT] = {
+    "assets/item/alcohol.png",
+    "assets/item/clock.png",
+    "assets/item/computer.png",
+    "assets/item/money.png",
+    "assets/item/phone.png"
+};
 
-Item::Item(int x, int y, int w, int h) {
-    rect = { x, y, w, h };
-    texture = nullptr; // Không có ảnh thì để trống
-}
-
-Item::Item(SDL_Renderer* renderer, const char* imagePath, int x, int y, int w, int h) {
-    // Load ảnh của Item
-    SDL_Surface* loadedSurface = IMG_Load(imagePath);
-    if (!loadedSurface) {
-        printf("Không thể load ảnh %s! SDL_Error: %s\n", imagePath, SDL_GetError());
-        texture = nullptr;
-        return;
-    }
-
-    texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-    SDL_FreeSurface(loadedSurface);
-
-    // Đặt vị trí và kích thước
-    rect = { x, y, w, h };
-}
-SDL_Rect rect;
-
-SDL_Rect Item::getRect() const {
-    return rect;
+Item::Item(SDL_Renderer* renderer, int x, int y, ItemType type)
+    : type(type), collected(false) {
+    rect = { x, y, 50, 50 };
+    SDL_Surface* surface = IMG_Load(itemPaths[type]);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
 }
 
 Item::~Item() {
-    if (texture) {
-        SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(texture);
+}
+
+void Item::render(SDL_Renderer* renderer, const SDL_Rect& camera) {
+    if (!collected) {
+        SDL_Rect renderRect = {
+            rect.x - camera.x,
+            rect.y - camera.y,
+            rect.w,
+            rect.h
+        };
+        SDL_RenderCopy(renderer, texture, nullptr, &renderRect);
     }
 }
 
-void Item::render(SDL_Renderer* renderer) {
-    if (texture) {
-        SDL_RenderCopy(renderer, texture, nullptr, &rect);
-    }
-}
+SDL_Rect Item::getRect() const { return rect; }
+ItemType Item::getType() const { return type; }
+bool Item::isCollected() const { return collected; }
+void Item::collect() { collected = true; }

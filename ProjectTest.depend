@@ -77,7 +77,7 @@
 	<iostream>
 	<vector>
 
-1744788082 d:\codeblocks\thiefgame\src\item.h
+1744818668 d:\codeblocks\thiefgame\src\item.h
 	<SDL.h>
 	<SDL_image.h>
 
@@ -94,7 +94,7 @@
 	"Blackspot.h"
 	<SDL_image.h>
 
-1744788080 source:d:\codeblocks\thiefgame\src\gamefull.cpp
+1744816931 source:d:\codeblocks\thiefgame\src\gamefull.cpp
 	"GameFull.h"
 	<iostream>
 	<SDL_image.h>
@@ -105,9 +105,8 @@
 	"defs.h"
 	<iostream>
 
-1744728954 source:d:\codeblocks\thiefgame\src\item.cpp
+1744818536 source:d:\codeblocks\thiefgame\src\item.cpp
 	"Item.h"
-	<cstdio>
 
 1742304805 source:d:\codeblocks\thiefgame\src\obstacle.cpp
 	"Obstacle.h"
@@ -120,11 +119,13 @@
 
 1744759491 d:\codeblocks\thiefgame\src\defs.h
 
-1742373439 source:d:\codeblocks\thiefgame\src\droppoint.cpp
+1744815020 source:d:\codeblocks\thiefgame\src\droppoint.cpp
 	"DropPoint.h"
 
-1742373283 d:\codeblocks\thiefgame\src\droppoint.h
+1744818675 d:\codeblocks\thiefgame\src\droppoint.h
 	<SDL.h>
+	<SDL_image.h>
+	"Item.h"
 
 1744788081 source:d:\codeblocks\thiefgame\src\house.cpp
 	"House.h"

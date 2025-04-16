@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SDL_image.h>
 #include <defs.h>
+using namespace std;
 
 GameFull::GameFull() : running(true), gameStarted(false), dogAlert(0),
                       startScreenTexture(nullptr), playButtonTexture(nullptr) {
@@ -23,26 +24,26 @@ bool GameFull::init() {
     // Load start screen image
     SDL_Surface* startSurface = IMG_Load("assets/start.jpg");
     if (!startSurface) {
-        std::cerr << "Failed to load start screen image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load start screen image: " << IMG_GetError() << endl;
         return false;
     }
     startScreenTexture = SDL_CreateTextureFromSurface(graphics.getRenderer(), startSurface);
     SDL_FreeSurface(startSurface);
     if (!startScreenTexture) {
-        std::cerr << "Failed to create start screen texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create start screen texture: " << SDL_GetError() << endl;
         return false;
     }
 
     // Load play button image
     SDL_Surface* playSurface = IMG_Load("assets/play.png");
     if (!playSurface) {
-        std::cerr << "Failed to load play button image: " << IMG_GetError() << std::endl;
+        cerr << "Failed to load play button image: " << IMG_GetError() << endl;
         return false;
     }
     playButtonTexture = SDL_CreateTextureFromSurface(graphics.getRenderer(), playSurface);
     SDL_FreeSurface(playSurface);
     if (!playButtonTexture) {
-        std::cerr << "Failed to create play button texture: " << SDL_GetError() << std::endl;
+        cerr << "Failed to create play button texture: " << SDL_GetError() << endl;
         return false;
     }
 
@@ -54,25 +55,19 @@ bool GameFull::init() {
         buttonHeight
     };
 
-    /* Khởi tạo các bức tường
-(452, 367, 32, 243);
-(452, 367, 437, 130);
-(856, 467, 100, 142);
-(918, 254, 695, 149);
-(1582, 254, 32, 704);
-(1349, 958, 264, 241);
-(1618, 1011, 95, 219);
-(1680, 1009, 538, 105);
-(2187, 1008, 28, 560);
-(905, 1028, 31, 635);
-(908, 960, 280, 169);
-(451, 935, 36, 190);*/
+    // Khởi tạo vị trí các vật phẩm
+    items.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
+    items.emplace_back(graphics.getRenderer(), 1460, 430, ITEM_ALCOHOL);
+    items.emplace_back(graphics.getRenderer(), 1740, 1150, ITEM_CLOCK);
+    items.emplace_back(graphics.getRenderer(), 1383, 1166, ITEM_COMPUTER);
+    items.emplace_back(graphics.getRenderer(), 564, 468, ITEM_PHONE);
 
-    // Khởi tạo các vật phẩm với vị trí và kích thước
-    items.emplace_back(400, 300, 50, 50);
-
-    // Khởi tạo các điểm thả vật phẩm
-    dropPoints.emplace_back(500, 300, 1);
+    // Khởi tạo vị trí các điểm thả vật phẩm
+    dropPoints.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
+    dropPoints.emplace_back(graphics.getRenderer(), 1460, 430, ITEM_ALCOHOL);
+    dropPoints.emplace_back(graphics.getRenderer(), 1740, 1150, ITEM_CLOCK);
+    dropPoints.emplace_back(graphics.getRenderer(), 1383, 1166, ITEM_COMPUTER);
+    dropPoints.emplace_back(graphics.getRenderer(), 564, 468, ITEM_PHONE);
 
     return true;
 }
@@ -92,10 +87,33 @@ void GameFull::render() {
 
     SDL_SetRenderDrawColor(graphics.getRenderer(), 192, 192, 192, 255);
     SDL_RenderClear(graphics.getRenderer());
+
+    SDL_Rect camera = {
+        thief->getRect().x + thief->getRect().w / 2 - SCREEN_WIDTH / 2,
+        thief->getRect().y + thief->getRect().h / 2 - SCREEN_HEIGHT / 2,
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT
+    };
+
+    for (auto& drop : dropPoints) {
+        drop.render(graphics.getRenderer(), camera);
+    }
+
+    for (auto& item : items) {
+        item.render(graphics.getRenderer(), camera);
+    }
+
+
+    // Vẽ tên trộm
     thief->render(graphics.getRenderer());
+
+    // Vẽ thanh tiếng ồn
     graphics.drawNoiseBar(graphics.getRenderer());
+
+    // Hiển thị ra màn hình
     graphics.present();
 }
+
 
 void GameFull::handleEvents() {
     SDL_Event event;
