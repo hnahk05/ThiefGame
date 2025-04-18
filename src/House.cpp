@@ -38,5 +38,5 @@ bool House::isColliding(int x, int y) {
     Uint8 r, g, b;
     SDL_GetRGB(pixel, maskSurface->format, &r, &g, &b);
 
-    return (r == 0 && g == 0 && b == 0);  // màu đen là va chạm
+    return (r != 255 && g != 255 && b != 255);  // không phải màu trắng là va chạm
 }

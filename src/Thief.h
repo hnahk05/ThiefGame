@@ -25,13 +25,11 @@ private:
     bool movingUp = false;
     bool movingDown = false;
     bool facingLeft;
-    vector<Item> items; // Danh sách vật phẩm
     SDL_Rect collisionRect;  // Rectangle for collision detection
 
 public:
     Thief(SDL_Renderer* renderer);
     ~Thief();
-    bool checkCollision(const SDL_Rect&, const Item&);
     void handleInput(const SDL_Event& event);
     void update(House& House);
     void render(SDL_Renderer* renderer);

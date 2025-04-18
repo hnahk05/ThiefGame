@@ -14,8 +14,8 @@ const int DOG_ALERT_LIMIT = 100;
 const int startX = 300;
 const int startY = 670;
 
-const int buttonWidth = 200;  // Adjust these values based on your play button image size
-const int buttonHeight = 100;
+const int buttonWidth = 736/2;
+const int buttonHeight = 671/2;
 
 
 //theif

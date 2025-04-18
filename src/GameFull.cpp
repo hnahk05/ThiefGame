@@ -55,19 +55,19 @@ bool GameFull::init() {
         buttonHeight
     };
 
-    // Khởi tạo vị trí các vật phẩm
-    items.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
-    items.emplace_back(graphics.getRenderer(), 1460, 430, ITEM_ALCOHOL);
-    items.emplace_back(graphics.getRenderer(), 1740, 1150, ITEM_CLOCK);
-    items.emplace_back(graphics.getRenderer(), 1383, 1166, ITEM_COMPUTER);
-    items.emplace_back(graphics.getRenderer(), 564, 468, ITEM_PHONE);
-
-    // Khởi tạo vị trí các điểm thả vật phẩm
-    dropPoints.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
+    // Initialize droppoints at specific coordinates
+    /*dropPoints.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
     dropPoints.emplace_back(graphics.getRenderer(), 1460, 430, ITEM_ALCOHOL);
     dropPoints.emplace_back(graphics.getRenderer(), 1740, 1150, ITEM_CLOCK);
     dropPoints.emplace_back(graphics.getRenderer(), 1383, 1166, ITEM_COMPUTER);
     dropPoints.emplace_back(graphics.getRenderer(), 564, 468, ITEM_PHONE);
+
+    // Initialize items at the same positions
+    items.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
+    items.emplace_back(graphics.getRenderer(), 1460, 430, ITEM_ALCOHOL);
+    items.emplace_back(graphics.getRenderer(), 1740, 1150, ITEM_CLOCK);
+    items.emplace_back(graphics.getRenderer(), 1383, 1166, ITEM_COMPUTER);
+    items.emplace_back(graphics.getRenderer(), 564, 468, ITEM_PHONE);*/
 
     return true;
 }
@@ -94,15 +94,6 @@ void GameFull::render() {
         SCREEN_WIDTH,
         SCREEN_HEIGHT
     };
-
-    for (auto& drop : dropPoints) {
-        drop.render(graphics.getRenderer(), camera);
-    }
-
-    for (auto& item : items) {
-        item.render(graphics.getRenderer(), camera);
-    }
-
 
     // Vẽ tên trộm
     thief->render(graphics.getRenderer());
@@ -154,13 +145,6 @@ void GameFull::update() {
         thief->update(House);
     }
     SDL_Rect thiefRect = thief->getRect();
-
-    for (auto& item : items) {
-        SDL_Rect itemRect = item.getRect();
-        if (checkCollision(thiefRect, itemRect)) {
-            std::cout << "Thief chạm item!" << std::endl;
-        }
-    }
 
 }
 

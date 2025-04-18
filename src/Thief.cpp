@@ -94,12 +94,6 @@ void Thief::handleInput(const SDL_Event& event) {
     }
 }
 
-bool Thief::checkCollision(const SDL_Rect& a, const Item& item) {
-    SDL_Rect b = item.getRect();
-    return (a.x < b.x + b.w && a.x + a.w > b.x &&
-            a.y < b.y + b.h && a.y + a.h > b.y);
-}
-
 void Thief::update(House& house) {
     SDL_Rect nextPos = dstRect;
     frameDelay++;

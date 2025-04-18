@@ -15,8 +15,6 @@ private:
     Graphics graphics;
     Thief* thief;
     House house;
-    std::vector<Item> items;
-    std::vector<DropPoint> dropPoints;
     int dogAlert;
     SDL_Texture* startScreenTexture;
     SDL_Texture* playButtonTexture;
