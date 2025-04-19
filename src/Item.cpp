@@ -57,11 +57,6 @@ void Item::spawnItem() {
             break;
         }
     }
-    if (allSpawned) {
-        currentItemIndex = -1;
-        printf("Tất cả item đã xuất hiện!\n");
-        return;
-    }
 
     int itemIndex;
     do {

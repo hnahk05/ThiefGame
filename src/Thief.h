@@ -29,9 +29,10 @@ private:
     SDL_Rect collisionRect;
     bool isHoldingItem;
     Item* heldItem;
+    GameFull* game; // Con trỏ đến GameFull
 
 public:
-    Thief(SDL_Renderer* renderer);
+    Thief(SDL_Renderer* renderer, GameFull* gameFull);
     ~Thief();
     int getCameraX() const { return camera.x; }
     int getCameraY() const { return camera.y; }
@@ -41,8 +42,8 @@ public:
     SDL_Rect getRect() const;
     bool isHolding() const { return isHoldingItem; }
     void pickUpItem(Item* item);
-    void dropItem(Item* item); // Cập nhật để kiểm tra droppoint
-    void renderDropPoints(SDL_Renderer* renderer); // Render droppoint
+    void dropItem(Item* item);
+    void renderDropPoints(SDL_Renderer* renderer);
 };
 
 #endif

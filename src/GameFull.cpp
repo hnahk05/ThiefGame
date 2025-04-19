@@ -6,11 +6,15 @@
 #include <defs.h>
 using namespace std;
 
+extern int noiseLevel;
+
 GameFull::GameFull() : graphics(), thief(nullptr), items(nullptr), house(),
-                       running(true), gameStarted(false),
-                       startScreenTexture(nullptr), playButtonTexture(nullptr) {
+                       running(true), gameStarted(false), gameEnded(false),
+                       itemsDelivered(0), startScreenTexture(nullptr),
+                       playButtonTexture(nullptr), loseScreenTexture(nullptr),
+                       winScreenTexture(nullptr) {
     if (graphics.init()) {
-        thief = new Thief(graphics.getRenderer());
+        thief = new Thief(graphics.getRenderer(), this);
         items = new Item(graphics.getRenderer(), FIXED_X, FIXED_Y);
         items->spawnItem();
     }
@@ -32,6 +36,14 @@ GameFull::~GameFull() {
     if (playButtonTexture) {
         SDL_DestroyTexture(playButtonTexture);
         playButtonTexture = nullptr;
+    }
+    if (loseScreenTexture) {
+        SDL_DestroyTexture(loseScreenTexture);
+        loseScreenTexture = nullptr;
+    }
+    if (winScreenTexture) {
+        SDL_DestroyTexture(winScreenTexture);
+        winScreenTexture = nullptr;
     }
 }
 
@@ -55,6 +67,18 @@ bool GameFull::init() {
     SDL_FreeSurface(playSurface);
     if (!playButtonTexture) return false;
 
+    SDL_Surface* loseSurface = IMG_Load("assets/lose.jpg");
+    if (!loseSurface) return false;
+    loseScreenTexture = SDL_CreateTextureFromSurface(graphics.getRenderer(), loseSurface);
+    SDL_FreeSurface(loseSurface);
+    if (!loseScreenTexture) return false;
+
+    SDL_Surface* winSurface = IMG_Load("assets/win.jpg");
+    if (!winSurface) return false;
+    winScreenTexture = SDL_CreateTextureFromSurface(graphics.getRenderer(), winSurface);
+    SDL_FreeSurface(winSurface);
+    if (!winScreenTexture) return false;
+
     playButtonRect = {
         (SCREEN_WIDTH - buttonWidth) / 2,
         (SCREEN_HEIGHT - buttonHeight) / 2,
@@ -71,9 +95,23 @@ void GameFull::renderStartScreen() {
     SDL_RenderPresent(graphics.getRenderer());
 }
 
+void GameFull::renderEndScreen() {
+    SDL_RenderClear(graphics.getRenderer());
+    if (noiseLevel >= 100 && itemsDelivered < 5) {
+        SDL_RenderCopy(graphics.getRenderer(), loseScreenTexture, NULL, NULL);
+    } else if (itemsDelivered >= 5 && noiseLevel < 100) {
+        SDL_RenderCopy(graphics.getRenderer(), winScreenTexture, NULL, NULL);
+    }
+    SDL_RenderPresent(graphics.getRenderer());
+}
+
 void GameFull::render() {
     if (!gameStarted) {
         renderStartScreen();
+        return;
+    }
+    if (gameEnded) {
+        renderEndScreen();
         return;
     }
 
@@ -100,6 +138,10 @@ void GameFull::handleEvents() {
                     gameStarted = true;
                 }
             }
+        } else if (gameEnded) {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
+                resetGame();
+            }
         } else {
             thief->handleInput(event, items);
         }
@@ -114,11 +156,33 @@ bool GameFull::checkCollision(SDL_Rect a, SDL_Rect b) {
     return true;
 }
 
-House House;
+void GameFull::resetGame() {
+    gameStarted = false;
+    gameEnded = false;
+    itemsDelivered = 0;
+    noiseLevel = 0;
+    if (items) {
+        delete items;
+        items = new Item(graphics.getRenderer(), FIXED_X, FIXED_Y);
+        items->spawnItem();
+    }
+    if (thief) {
+        delete thief;
+        thief = new Thief(graphics.getRenderer(), this);
+    }
+}
+
+void GameFull::collectItem() {
+    itemsDelivered++;
+    cout << "Items Delivered: " << itemsDelivered << endl; // In ra console
+}
 
 void GameFull::update() {
-    if (gameStarted) {
-        thief->update(House);
+    if (gameStarted && !gameEnded) {
+        thief->update(house);
+        if (noiseLevel >= 100 || itemsDelivered >= 5) {
+            gameEnded = true;
+        }
     }
 }
 

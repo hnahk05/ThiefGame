@@ -9,7 +9,7 @@ SDL_Texture* backgroundTexture = nullptr;
 
 // Định nghĩa tọa độ và kích thước cho droppoint (vùng va chạm)
 const SDL_Rect dropPointRects[5] = {
-    {965, 357, 211, 269}, // alcohol
+    {965, 357, 211, 269},  // alcohol
     {1726, 1100, 126, 225}, // computer
     {1350, 1207, 252, 165}, // clock
     {935, 1211, 264, 224}, // money
@@ -25,12 +25,12 @@ const SDL_Rect dropPointRenderSizes[5] = {
     {0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT}  // phone
 };
 
-Thief::Thief(SDL_Renderer* renderer)
+Thief::Thief(SDL_Renderer* renderer, GameFull* gameFull)
     : renderer(renderer), frameIndex(0), frameDelay(0),
       movingLeft(false), movingRight(false), movingUp(false), movingDown(false),
       facingLeft(false), texture(nullptr), foregroundTexture(nullptr),
       ATexture(nullptr), BTexture(nullptr), CTexture(nullptr), DTexture(nullptr), ETexture(nullptr),
-      isHoldingItem(false), heldItem(nullptr) {
+      isHoldingItem(false), heldItem(nullptr), game(gameFull) {
 
     camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
@@ -148,13 +148,17 @@ void Thief::dropItem(Item* item) {
                     heldItem->drop(centerX, centerY);
                     // Xóa texture của droppoint
                     switch (i) {
-                        case 0: SDL_DestroyTexture(ATexture); ATexture = nullptr; break;
-                        case 2: SDL_DestroyTexture(BTexture); BTexture = nullptr; break;
-                        case 1: SDL_DestroyTexture(CTexture); CTexture = nullptr; break;
-                        case 3: SDL_DestroyTexture(DTexture); DTexture = nullptr; break;
-                        case 4: SDL_DestroyTexture(ETexture); ETexture = nullptr; break;
+                        case 0: SDL_DestroyTexture(ATexture); ATexture = nullptr; break; // alcohol
+                        case 2: SDL_DestroyTexture(BTexture); BTexture = nullptr; break; // computer
+                        case 1: SDL_DestroyTexture(CTexture); CTexture = nullptr; break; // clock
+                        case 3: SDL_DestroyTexture(DTexture); DTexture = nullptr; break; // money
+                        case 4: SDL_DestroyTexture(ETexture); ETexture = nullptr; break; // phone
                     }
-                    dropped = true;
+                    dropped = true; // Đặt thành true để item được thả
+                    // Gọi collectItem của GameFull
+                    if (game) {
+                        game->collectItem();
+                    }
                 } else {
                     // Sai droppoint: tăng noiseLevel
                     noiseLevel += 10;
@@ -238,7 +242,7 @@ void Thief::update(House& house) {
         dstRect = nextPos;
         collisionRect = nextCollisionRect;
     } else {
-        noiseLevel += 1;
+        noiseLevel += 4;
         if (noiseLevel > 100) noiseLevel = 100;
     }
 
@@ -272,7 +276,6 @@ void Thief::render(SDL_Renderer* renderer) {
 void Thief::renderDropPoints(SDL_Renderer* renderer) {
     SDL_Rect renderRect;
     for (int i = 0; i < 5; ++i) {
-        // Render droppoint với kích thước tùy chỉnh
         renderRect = {
             dropPointRenderSizes[i].x - camera.x,
             dropPointRenderSizes[i].y - camera.y,
