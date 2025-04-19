@@ -94,7 +94,7 @@
 	"Blackspot.h"
 	<SDL_image.h>
 
-1745076386 source:d:\codeblocks\thiefgame\src\gamefull.cpp
+1745080237 source:d:\codeblocks\thiefgame\src\gamefull.cpp
 	"GameFull.h"
 	"Thief.h"
 	"Item.h"
@@ -107,7 +107,7 @@
 	"defs.h"
 	<iostream>
 
-1745075512 source:d:\codeblocks\thiefgame\src\item.cpp
+1745080977 source:d:\codeblocks\thiefgame\src\item.cpp
 	"Item.h"
 	<iostream>
 	<defs.h>
@@ -116,7 +116,7 @@
 	"Obstacle.h"
 	<SDL_image.h>
 
-1745078257 source:d:\codeblocks\thiefgame\src\thief.cpp
+1745082920 source:d:\codeblocks\thiefgame\src\thief.cpp
 	"Thief.h"
 	"Item.h"
 	"defs.h"

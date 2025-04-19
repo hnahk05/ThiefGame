@@ -7,13 +7,22 @@ using namespace std;
 extern int noiseLevel;
 SDL_Texture* backgroundTexture = nullptr;
 
-// Định nghĩa tọa độ và kích thước cho droppoint (có thể điều chỉnh)
+// Định nghĩa tọa độ và kích thước cho droppoint (vùng va chạm)
 const SDL_Rect dropPointRects[5] = {
-    {100, 100, 100, 100}, // alcohol
-    {300, 100, 100, 100}, // computer
-    {500, 100, 100, 100}, // clock
-    {700, 100, 100, 100}, // money
-    {900, 100, 100, 100}  // phone
+    {965, 357, 211, 269}, // alcohol
+    {1350, 1128, 152, 265}, // computer
+    {1726, 1100, 126, 225}, // clock
+    {935, 1211, 264, 224}, // money
+    {493, 458, 149, 229}  // phone
+};
+
+// Kích thước render cho hình ảnh droppoint (khác với vùng va chạm)
+const SDL_Rect dropPointRenderSizes[5] = {
+    {0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT}, // alcohol
+    {0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT}, // computer
+    {0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT}, // clock
+    {0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT}, // money
+    {0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT}  // phone
 };
 
 Thief::Thief(SDL_Renderer* renderer)
@@ -27,6 +36,7 @@ Thief::Thief(SDL_Renderer* renderer)
 
     SDL_Surface* bgSurface = IMG_Load("assets/background.png");
     SDL_Surface* fgSurface = IMG_Load("assets/foreground.png");
+
     SDL_Surface* A = IMG_Load("assets/alcoholground.png");
     SDL_Surface* B = IMG_Load("assets/computerground.png");
     SDL_Surface* C = IMG_Load("assets/clockground.png");
@@ -46,18 +56,12 @@ Thief::Thief(SDL_Renderer* renderer)
     ETexture = SDL_CreateTextureFromSurface(renderer, E);
 
     SDL_FreeSurface(loadedSurface);
-    SDL_FreeSurface(bgSurface);
-    SDL_FreeSurface(fgSurface);
-    SDL_FreeSurface(A);
-    SDL_FreeSurface(B);
-    SDL_FreeSurface(C);
-    SDL_FreeSurface(D);
-    SDL_FreeSurface(E);
+    SDL_FreeSurface(bgSurface); SDL_FreeSurface(fgSurface);
+    SDL_FreeSurface(A); SDL_FreeSurface(B); SDL_FreeSurface(C); SDL_FreeSurface(D); SDL_FreeSurface(E);
 
     if (!texture || !backgroundTexture || !foregroundTexture || !ATexture || !BTexture || !CTexture || !DTexture || !ETexture) return;
 
     srcRect = {0, 0, FRAME_WIDTH, FRAME_HEIGHT};
-
     dstRect = {startX, startY, FRAME_WIDTH, FRAME_HEIGHT};
 
     collisionRect = {
@@ -134,8 +138,32 @@ void Thief::pickUpItem(Item* item) {
 void Thief::dropItem(Item* item) {
     if (heldItem) {
         int itemIndex = heldItem->getCurrentItemIndex();
-        if (itemIndex >= 0 && GameFull::checkCollision(getRect(), dropPointRects[itemIndex])) {
-            heldItem->drop(dropPointRects[itemIndex].x, dropPointRects[itemIndex].y);
+        bool dropped = false;
+        for (int i = 0; i < 5; ++i) {
+            if (GameFull::checkCollision(getRect(), dropPointRects[i])) {
+                if (itemIndex == i) {
+                    // Đúng droppoint: đặt item tại trung tâm droppoint
+                    int centerX = dropPointRects[i].x + dropPointRects[i].w / 2 - ITEM_SIZE / 2;
+                    int centerY = dropPointRects[i].y + dropPointRects[i].h / 2 - ITEM_SIZE / 2;
+                    heldItem->drop(centerX, centerY);
+                    // Xóa texture của droppoint
+                    switch (i) {
+                        case 0: SDL_DestroyTexture(ATexture); ATexture = nullptr; break;
+                        case 1: SDL_DestroyTexture(BTexture); BTexture = nullptr; break;
+                        case 2: SDL_DestroyTexture(CTexture); CTexture = nullptr; break;
+                        case 3: SDL_DestroyTexture(DTexture); DTexture = nullptr; break;
+                        case 4: SDL_DestroyTexture(ETexture); ETexture = nullptr; break;
+                    }
+                    dropped = true;
+                } else {
+                    // Sai droppoint: tăng noiseLevel
+                    noiseLevel += 10;
+                    if (noiseLevel > 100) noiseLevel = 100;
+                }
+                break;
+            }
+        }
+        if (dropped) {
             heldItem = nullptr;
             isHoldingItem = false;
         }
@@ -244,30 +272,29 @@ void Thief::render(SDL_Renderer* renderer) {
 void Thief::renderDropPoints(SDL_Renderer* renderer) {
     SDL_Rect renderRect;
     for (int i = 0; i < 5; ++i) {
-        if (heldItem && heldItem->isDropPointActive(i)) {
-            renderRect = {
-                dropPointRects[i].x - camera.x,
-                dropPointRects[i].y - camera.y,
-                dropPointRects[i].w,
-                dropPointRects[i].h
-            };
-            switch (i) {
-                case 0:
-                    SDL_RenderCopy(renderer, ATexture, NULL, &renderRect);
-                    break;
-                case 1:
-                    SDL_RenderCopy(renderer, BTexture, NULL, &renderRect);
-                    break;
-                case 2:
-                    SDL_RenderCopy(renderer, CTexture, NULL, &renderRect);
-                    break;
-                case 3:
-                    SDL_RenderCopy(renderer, DTexture, NULL, &renderRect);
-                    break;
-                case 4:
-                    SDL_RenderCopy(renderer, ETexture, NULL, &renderRect);
-                    break;
-            }
+        // Render droppoint với kích thước tùy chỉnh
+        renderRect = {
+            dropPointRenderSizes[i].x - camera.x,
+            dropPointRenderSizes[i].y - camera.y,
+            dropPointRenderSizes[i].w,
+            dropPointRenderSizes[i].h
+        };
+        switch (i) {
+            case 0:
+                if (ATexture) SDL_RenderCopy(renderer, ATexture, NULL, &renderRect);
+                break;
+            case 1:
+                if (BTexture) SDL_RenderCopy(renderer, BTexture, NULL, &renderRect);
+                break;
+            case 2:
+                if (CTexture) SDL_RenderCopy(renderer, CTexture, NULL, &renderRect);
+                break;
+            case 3:
+                if (DTexture) SDL_RenderCopy(renderer, DTexture, NULL, &renderRect);
+                break;
+            case 4:
+                if (ETexture) SDL_RenderCopy(renderer, ETexture, NULL, &renderRect);
+                break;
         }
     }
 }

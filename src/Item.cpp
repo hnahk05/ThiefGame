@@ -36,7 +36,7 @@ Item::Item(SDL_Renderer* renderer, int fixedX, int fixedY)
     SDL_FreeSurface(surface5);
 
     itemSpawned = vector<bool>(5, false);
-    dropPointPlaced = vector<bool>(5, false); // Ban đầu chưa có item nào được đặt
+    dropPointPlaced = vector<bool>(5, false);
     fixedPosition = {fixedX, fixedY, ITEM_SIZE, ITEM_SIZE};
     position = fixedPosition;
 }
@@ -83,7 +83,7 @@ void Item::drop(int x, int y) {
     position.x = x;
     position.y = y;
     if (currentItemIndex >= 0) {
-        dropPointPlaced[currentItemIndex] = true; // Đánh dấu droppoint đã được đặt
+        dropPointPlaced[currentItemIndex] = true;
     }
     spawnItem();
 }
@@ -94,7 +94,7 @@ void Item::updatePosition(int x, int y) {
 }
 
 void Item::render(SDL_Renderer* renderer, int cameraX, int cameraY) {
-    if (currentItemIndex == -1 || (!pickedUp && dropPointPlaced[currentItemIndex])) return;
+    if (currentItemIndex == -1) return;
 
     SDL_Rect renderRect = {
         position.x - cameraX,
