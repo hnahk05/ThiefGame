@@ -31,6 +31,8 @@ private:
 public:
     Thief(SDL_Renderer* renderer);
     ~Thief();
+    int getCameraX() const { return camera.x; }
+    int getCameraY() const { return camera.y; }
     void handleInput(const SDL_Event& event);
     void update(House& House);
     void render(SDL_Renderer* renderer);

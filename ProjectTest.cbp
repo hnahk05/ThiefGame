@@ -50,8 +50,6 @@
 			<Add library="SDL2" />
 		</Linker>
 		<Unit filename="main.cpp" />
-		<Unit filename="src/DropPoint.cpp" />
-		<Unit filename="src/DropPoint.h" />
 		<Unit filename="src/GameFull.cpp" />
 		<Unit filename="src/GameFull.h" />
 		<Unit filename="src/Graphics.cpp" />

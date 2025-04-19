@@ -4,10 +4,14 @@
 #include <defs.h>
 using namespace std;
 
-GameFull::GameFull() : running(true), gameStarted(false), dogAlert(0),
-                      startScreenTexture(nullptr), playButtonTexture(nullptr) {
+GameFull::GameFull() : running(true), gameStarted(false),
+                      startScreenTexture(nullptr), playButtonTexture(nullptr), items(nullptr) {
     if (graphics.init()) {
         thief = new Thief(graphics.getRenderer());
+        // Khởi tạo Item với vị trí cố định
+        items = new Item(graphics.getRenderer(), FIXED_X, FIXED_Y);
+        // Spawn item đầu tiên ngay khi khởi tạo
+        items->spawnItem();
     }
 }
 
@@ -15,6 +19,10 @@ GameFull::~GameFull() {
     if (thief) {
         delete thief;
         thief = nullptr;
+    }
+    if (items) {
+        delete items; // Dọn dẹp đối tượng Item
+        items = nullptr;
     }
     if (startScreenTexture) {
         SDL_DestroyTexture(startScreenTexture);
@@ -68,7 +76,7 @@ void GameFull::render() {
         return;
     }
 
-    SDL_SetRenderDrawColor(graphics.getRenderer(), 192, 192, 192, 255);
+    SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, 255);
     SDL_RenderClear(graphics.getRenderer());
 
     SDL_Rect camera = {
@@ -79,6 +87,7 @@ void GameFull::render() {
     };
 
     thief->render(graphics.getRenderer());
+    items->render(graphics.getRenderer(), thief->getCameraX(), thief->getCameraY()); // Vẽ items
     graphics.drawNoiseBar(graphics.getRenderer());
     SDL_RenderPresent(graphics.getRenderer());
 }
@@ -116,8 +125,14 @@ House House;
 void GameFull::update() {
     if (gameStarted) {
         thief->update(House);
+
+        // Kiểm tra va chạm giữa nhân vật và item
+        SDL_Rect thiefRect = thief->getRect();
+        SDL_Rect itemRect = {FIXED_X, FIXED_Y, ITEM_SIZE, ITEM_SIZE}; // Vị trí cố định và kích thước của item
+        if (checkCollision(thiefRect, itemRect)) {
+            items->spawnItem(); // Spawn item mới khi nhân vật chạm vào item
+        }
     }
-    SDL_Rect thiefRect = thief->getRect();
 }
 
 void GameFull::run() {

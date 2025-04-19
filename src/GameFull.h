@@ -1,13 +1,10 @@
-#ifndef GAME_FULL_H
-#define GAME_FULL_H
+#ifndef GAMEFULL_H
+#define GAMEFULL_H
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <vector>
-#include "DropPoint.h"
-#include "Thief.h"
 #include "Graphics.h"
+#include "Thief.h"
 #include "House.h"
+#include "Item.h" // Thêm include cho Item
 
 class GameFull {
 public:
@@ -15,21 +12,23 @@ public:
     ~GameFull();
     bool init();
     void run();
-    void render();
-    void update();
     void handleEvents();
-    void renderStartScreen();
-    bool isPointInRect(int x, int y, const SDL_Rect& rect);
+    void update();
+    void render();
 
 private:
+    Graphics graphics;
+    Thief* thief;
+    Item* items; // Thêm đối tượng Item
+    House house;
     bool running;
     bool gameStarted;
-    int dogAlert;
     SDL_Texture* startScreenTexture;
     SDL_Texture* playButtonTexture;
     SDL_Rect playButtonRect;
-    Thief* thief;
-    Graphics graphics;
+
+    void renderStartScreen();
+    bool isPointInRect(int x, int y, const SDL_Rect& rect);
 };
 
-#endif // GAME_FULL_H
+#endif
