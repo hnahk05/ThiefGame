@@ -1,21 +1,32 @@
 #include "Thief.h"
+#include "Item.h"
 #include "defs.h"
+#include "GameFull.h"
 #include <vector>
 using namespace std;
 extern int noiseLevel;
 SDL_Texture* backgroundTexture = nullptr;
 
+// Định nghĩa tọa độ và kích thước cho droppoint (có thể điều chỉnh)
+const SDL_Rect dropPointRects[5] = {
+    {100, 100, 100, 100}, // alcohol
+    {300, 100, 100, 100}, // computer
+    {500, 100, 100, 100}, // clock
+    {700, 100, 100, 100}, // money
+    {900, 100, 100, 100}  // phone
+};
+
 Thief::Thief(SDL_Renderer* renderer)
     : renderer(renderer), frameIndex(0), frameDelay(0),
       movingLeft(false), movingRight(false), movingUp(false), movingDown(false),
       facingLeft(false), texture(nullptr), foregroundTexture(nullptr),
-      ATexture(nullptr), BTexture(nullptr), CTexture(nullptr), DTexture(nullptr), ETexture(nullptr) {
+      ATexture(nullptr), BTexture(nullptr), CTexture(nullptr), DTexture(nullptr), ETexture(nullptr),
+      isHoldingItem(false), heldItem(nullptr) {
 
     camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
     SDL_Surface* bgSurface = IMG_Load("assets/background.png");
     SDL_Surface* fgSurface = IMG_Load("assets/foreground.png");
-    //load các ảnh droppoint
     SDL_Surface* A = IMG_Load("assets/alcoholground.png");
     SDL_Surface* B = IMG_Load("assets/computerground.png");
     SDL_Surface* C = IMG_Load("assets/clockground.png");
@@ -34,7 +45,6 @@ Thief::Thief(SDL_Renderer* renderer)
     DTexture = SDL_CreateTextureFromSurface(renderer, D);
     ETexture = SDL_CreateTextureFromSurface(renderer, E);
 
-
     SDL_FreeSurface(loadedSurface);
     SDL_FreeSurface(bgSurface);
     SDL_FreeSurface(fgSurface);
@@ -48,10 +58,8 @@ Thief::Thief(SDL_Renderer* renderer)
 
     srcRect = {0, 0, FRAME_WIDTH, FRAME_HEIGHT};
 
-    // Initialize character position
     dstRect = {startX, startY, FRAME_WIDTH, FRAME_HEIGHT};
 
-    // Initialize collision rectangle
     collisionRect = {
         dstRect.x + COLLISION_OFFSET_X,
         dstRect.y + COLLISION_OFFSET_Y,
@@ -59,7 +67,6 @@ Thief::Thief(SDL_Renderer* renderer)
         dstRect.h - (2 * COLLISION_OFFSET_Y)
     };
 
-    // Initialize camera position
     camera.x = startX - (SCREEN_WIDTH / 2 - FRAME_WIDTH / 2);
     camera.y = startY - (SCREEN_HEIGHT / 2 - FRAME_HEIGHT / 2);
 }
@@ -74,7 +81,7 @@ Thief::~Thief() {
     if (ETexture) SDL_DestroyTexture(ETexture);
 }
 
-void Thief::handleInput(const SDL_Event& event) {
+void Thief::handleInput(const SDL_Event& event, Item* item) {
     if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
             case SDLK_LEFT:
@@ -90,6 +97,13 @@ void Thief::handleInput(const SDL_Event& event) {
                 break;
             case SDLK_DOWN:
                 movingDown = true;
+                break;
+            case SDLK_e:
+                if (!isHoldingItem && item && GameFull::checkCollision(getRect(), {FIXED_X, FIXED_Y, ITEM_SIZE, ITEM_SIZE})) {
+                    pickUpItem(item);
+                } else if (isHoldingItem) {
+                    dropItem(item);
+                }
                 break;
         }
     }
@@ -107,6 +121,23 @@ void Thief::handleInput(const SDL_Event& event) {
             case SDLK_DOWN:
                 movingDown = false;
                 break;
+        }
+    }
+}
+
+void Thief::pickUpItem(Item* item) {
+    isHoldingItem = true;
+    heldItem = item;
+    item->pickUp();
+}
+
+void Thief::dropItem(Item* item) {
+    if (heldItem) {
+        int itemIndex = heldItem->getCurrentItemIndex();
+        if (itemIndex >= 0 && GameFull::checkCollision(getRect(), dropPointRects[itemIndex])) {
+            heldItem->drop(dropPointRects[itemIndex].x, dropPointRects[itemIndex].y);
+            heldItem = nullptr;
+            isHoldingItem = false;
         }
     }
 }
@@ -155,13 +186,11 @@ void Thief::update(House& house) {
         nextPos.h - (2 * COLLISION_OFFSET_Y)
     };
 
-    // Kiểm tra va chạm bằng mask
     bool isColliding = false;
 
-    // Kiểm tra va chạm theo viền khung chữ nhật
     for (int x = nextCollisionRect.x; x < nextCollisionRect.x + nextCollisionRect.w; ++x) {
-        if (house.isColliding(x, nextCollisionRect.y) ||  // cạnh trên
-            house.isColliding(x, nextCollisionRect.y + nextCollisionRect.h - 1)) {  // cạnh dưới
+        if (house.isColliding(x, nextCollisionRect.y) ||
+            house.isColliding(x, nextCollisionRect.y + nextCollisionRect.h - 1)) {
             isColliding = true;
             break;
         }
@@ -169,8 +198,8 @@ void Thief::update(House& house) {
 
     if (!isColliding) {
         for (int y = nextCollisionRect.y; y < nextCollisionRect.y + nextCollisionRect.h; ++y) {
-            if (house.isColliding(nextCollisionRect.x, y) ||  // cạnh trái
-                house.isColliding(nextCollisionRect.x + nextCollisionRect.w - 1, y)) {  // cạnh phải
+            if (house.isColliding(nextCollisionRect.x, y) ||
+                house.isColliding(nextCollisionRect.x + nextCollisionRect.w - 1, y)) {
                 isColliding = true;
                 break;
             }
@@ -184,16 +213,18 @@ void Thief::update(House& house) {
         noiseLevel += 1;
         if (noiseLevel > 100) noiseLevel = 100;
     }
+
+    if (isHoldingItem && heldItem) {
+        heldItem->updatePosition(dstRect.x, dstRect.y - ITEM_SIZE);
+    }
 }
 
 void Thief::render(SDL_Renderer* renderer) {
-    if (!texture || !backgroundTexture || !foregroundTexture || !ATexture || !BTexture || !CTexture || !DTexture || !ETexture) return;
+    if (!texture || !backgroundTexture || !foregroundTexture) return;
 
-    // Draw background
     SDL_Rect bgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
     SDL_RenderCopy(renderer, backgroundTexture, &bgRect, NULL);
 
-    // Draw character
     SDL_Rect renderRect = {
         dstRect.x - camera.x,
         dstRect.y - camera.y,
@@ -204,22 +235,41 @@ void Thief::render(SDL_Renderer* renderer) {
     SDL_RendererFlip flip = facingLeft ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
     SDL_RenderCopyEx(renderer, texture, &srcRect, &renderRect, 0, NULL, flip);
 
-    // Draw foreground
+    renderDropPoints(renderer);
+
     SDL_Rect fgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
     SDL_RenderCopy(renderer, foregroundTexture, &fgRect, NULL);
+}
 
-    //DrawABCDE
-    SDL_Rect ARect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
-    SDL_RenderCopy(renderer, ATexture, &ARect, NULL);
-    SDL_Rect BRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
-    SDL_RenderCopy(renderer, BTexture, &BRect, NULL);
-    SDL_Rect CRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
-    SDL_RenderCopy(renderer, CTexture, &CRect, NULL);
-    SDL_Rect DRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
-    SDL_RenderCopy(renderer, DTexture, &DRect, NULL);
-    SDL_Rect ERect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
-    SDL_RenderCopy(renderer, ETexture, &ERect, NULL);
-
+void Thief::renderDropPoints(SDL_Renderer* renderer) {
+    SDL_Rect renderRect;
+    for (int i = 0; i < 5; ++i) {
+        if (heldItem && heldItem->isDropPointActive(i)) {
+            renderRect = {
+                dropPointRects[i].x - camera.x,
+                dropPointRects[i].y - camera.y,
+                dropPointRects[i].w,
+                dropPointRects[i].h
+            };
+            switch (i) {
+                case 0:
+                    SDL_RenderCopy(renderer, ATexture, NULL, &renderRect);
+                    break;
+                case 1:
+                    SDL_RenderCopy(renderer, BTexture, NULL, &renderRect);
+                    break;
+                case 2:
+                    SDL_RenderCopy(renderer, CTexture, NULL, &renderRect);
+                    break;
+                case 3:
+                    SDL_RenderCopy(renderer, DTexture, NULL, &renderRect);
+                    break;
+                case 4:
+                    SDL_RenderCopy(renderer, ETexture, NULL, &renderRect);
+                    break;
+            }
+        }
+    }
 }
 
 SDL_Rect Thief::getRect() const {

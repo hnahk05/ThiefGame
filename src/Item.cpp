@@ -6,12 +6,10 @@ using namespace std;
 Item::Item(SDL_Renderer* renderer, int fixedX, int fixedY)
     : renderer(renderer), Item1Texture(nullptr), Item2Texture(nullptr),
       Item3Texture(nullptr), Item4Texture(nullptr), Item5Texture(nullptr),
-      currentItemIndex(-1) {
+      currentItemIndex(-1), pickedUp(false) {
 
-    // Khởi tạo ngẫu nhiên
     srand(time(0));
 
-    // Tải 5 ảnh item
     SDL_Surface* surface1 = IMG_Load("assets/alcohol.png");
     if (!surface1) return;
     SDL_Surface* surface2 = IMG_Load("assets/clock.png");
@@ -37,13 +35,10 @@ Item::Item(SDL_Renderer* renderer, int fixedX, int fixedY)
     SDL_FreeSurface(surface4);
     SDL_FreeSurface(surface5);
 
-    if (!Item1Texture || !Item2Texture || !Item3Texture || !Item4Texture || !Item5Texture) return;
-
-    // Khởi tạo trạng thái của các item (chưa xuất hiện)
-    itemSpawned = vector<bool>(5, false); // 5 items, tất cả chưa xuất hiện
-
-    // Đặt vị trí cố định cho item
+    itemSpawned = vector<bool>(5, false);
+    dropPointPlaced = vector<bool>(5, false); // Ban đầu chưa có item nào được đặt
     fixedPosition = {fixedX, fixedY, ITEM_SIZE, ITEM_SIZE};
+    position = fixedPosition;
 }
 
 Item::~Item() {
@@ -55,7 +50,6 @@ Item::~Item() {
 }
 
 void Item::spawnItem() {
-    // Kiểm tra xem còn item nào chưa xuất hiện không
     bool allSpawned = true;
     for (bool spawned : itemSpawned) {
         if (!spawned) {
@@ -64,37 +58,51 @@ void Item::spawnItem() {
         }
     }
     if (allSpawned) {
-        currentItemIndex = -1; // Không còn item nào để hiển thị
+        currentItemIndex = -1;
         printf("Tất cả item đã xuất hiện!\n");
         return;
     }
 
-    // Chọn ngẫu nhiên một item chưa xuất hiện
     int itemIndex;
     do {
-        itemIndex = rand() % 5; // Chọn ngẫu nhiên từ 0 đến 4
-    } while (itemSpawned[itemIndex]); // Lặp lại nếu item đã xuất hiện
+        itemIndex = rand() % 5;
+    } while (itemSpawned[itemIndex]);
 
-    // Đặt item hiện tại
     currentItemIndex = itemIndex;
-
-    // Đánh dấu item đã xuất hiện
     itemSpawned[itemIndex] = true;
+    position = fixedPosition;
+    pickedUp = false;
+}
+
+void Item::pickUp() {
+    pickedUp = true;
+}
+
+void Item::drop(int x, int y) {
+    pickedUp = false;
+    position.x = x;
+    position.y = y;
+    if (currentItemIndex >= 0) {
+        dropPointPlaced[currentItemIndex] = true; // Đánh dấu droppoint đã được đặt
+    }
+    spawnItem();
+}
+
+void Item::updatePosition(int x, int y) {
+    position.x = x;
+    position.y = y;
 }
 
 void Item::render(SDL_Renderer* renderer, int cameraX, int cameraY) {
-    // Nếu không có item nào đang hiển thị, không vẽ gì
-    if (currentItemIndex == -1) return;
+    if (currentItemIndex == -1 || (!pickedUp && dropPointPlaced[currentItemIndex])) return;
 
-    // Vẽ item tại vị trí cố định, điều chỉnh theo camera
     SDL_Rect renderRect = {
-        fixedPosition.x - cameraX,
-        fixedPosition.y - cameraY,
+        position.x - cameraX,
+        position.y - cameraY,
         ITEM_SIZE,
         ITEM_SIZE
     };
 
-    // Vẽ texture tương ứng với item hiện tại
     switch (currentItemIndex) {
         case 0:
             SDL_RenderCopy(renderer, Item1Texture, NULL, &renderRect);

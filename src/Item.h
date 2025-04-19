@@ -9,10 +9,16 @@
 
 class Item {
 public:
-    Item(SDL_Renderer* renderer, int fixedX, int fixedY); // Truyền vị trí cố định
+    Item(SDL_Renderer* renderer, int fixedX, int fixedY);
     ~Item();
-    void spawnItem(); // Chọn ngẫu nhiên một item và hiển thị tại vị trí cố định
-    void render(SDL_Renderer* renderer, int cameraX, int cameraY); // Vẽ item
+    void spawnItem();
+    void render(SDL_Renderer* renderer, int cameraX, int cameraY);
+    void pickUp();
+    void drop(int x, int y);
+    void updatePosition(int x, int y);
+    bool isPickedUp() const { return pickedUp; }
+    int getCurrentItemIndex() const { return currentItemIndex; }
+    bool isDropPointActive(int index) const { return !dropPointPlaced[index]; }
 
 private:
     SDL_Renderer* renderer;
@@ -22,9 +28,12 @@ private:
     SDL_Texture* Item4Texture;
     SDL_Texture* Item5Texture;
 
-    SDL_Rect fixedPosition; // Vị trí cố định của item
-    std::vector<bool> itemSpawned; // Trạng thái của từng item (đã xuất hiện hay chưa)
-    int currentItemIndex; // Chỉ số của item hiện tại (-1 nếu chưa có item)
+    SDL_Rect position;
+    SDL_Rect fixedPosition;
+    std::vector<bool> itemSpawned;
+    std::vector<bool> dropPointPlaced; // Trạng thái droppoint (đã đặt item hay chưa)
+    int currentItemIndex;
+    bool pickedUp;
 };
 
 #endif

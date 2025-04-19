@@ -1,16 +1,17 @@
 #include "GameFull.h"
+#include "Thief.h"
+#include "Item.h"
 #include <iostream>
 #include <SDL_image.h>
 #include <defs.h>
 using namespace std;
 
-GameFull::GameFull() : running(true), gameStarted(false),
-                      startScreenTexture(nullptr), playButtonTexture(nullptr), items(nullptr) {
+GameFull::GameFull() : graphics(), thief(nullptr), items(nullptr), house(),
+                       running(true), gameStarted(false),
+                       startScreenTexture(nullptr), playButtonTexture(nullptr) {
     if (graphics.init()) {
         thief = new Thief(graphics.getRenderer());
-        // Khởi tạo Item với vị trí cố định
         items = new Item(graphics.getRenderer(), FIXED_X, FIXED_Y);
-        // Spawn item đầu tiên ngay khi khởi tạo
         items->spawnItem();
     }
 }
@@ -21,7 +22,7 @@ GameFull::~GameFull() {
         thief = nullptr;
     }
     if (items) {
-        delete items; // Dọn dẹp đối tượng Item
+        delete items;
         items = nullptr;
     }
     if (startScreenTexture) {
@@ -79,15 +80,8 @@ void GameFull::render() {
     SDL_SetRenderDrawColor(graphics.getRenderer(), 0, 0, 0, 255);
     SDL_RenderClear(graphics.getRenderer());
 
-    SDL_Rect camera = {
-        thief->getRect().x + thief->getRect().w / 2 - SCREEN_WIDTH / 2,
-        thief->getRect().y + thief->getRect().h / 2 - SCREEN_HEIGHT / 2,
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT
-    };
-
     thief->render(graphics.getRenderer());
-    items->render(graphics.getRenderer(), thief->getCameraX(), thief->getCameraY()); // Vẽ items
+    items->render(graphics.getRenderer(), thief->getCameraX(), thief->getCameraY());
     graphics.drawNoiseBar(graphics.getRenderer());
     SDL_RenderPresent(graphics.getRenderer());
 }
@@ -107,12 +101,12 @@ void GameFull::handleEvents() {
                 }
             }
         } else {
-            thief->handleInput(event);
+            thief->handleInput(event, items);
         }
     }
 }
 
-bool checkCollision(SDL_Rect a, SDL_Rect b) {
+bool GameFull::checkCollision(SDL_Rect a, SDL_Rect b) {
     if (a.x + a.w <= b.x) return false;
     if (a.x >= b.x + b.w) return false;
     if (a.y + a.h <= b.y) return false;
@@ -125,13 +119,6 @@ House House;
 void GameFull::update() {
     if (gameStarted) {
         thief->update(House);
-
-        // Kiểm tra va chạm giữa nhân vật và item
-        SDL_Rect thiefRect = thief->getRect();
-        SDL_Rect itemRect = {FIXED_X, FIXED_Y, ITEM_SIZE, ITEM_SIZE}; // Vị trí cố định và kích thước của item
-        if (checkCollision(thiefRect, itemRect)) {
-            items->spawnItem(); // Spawn item mới khi nhân vật chạm vào item
-        }
     }
 }
 

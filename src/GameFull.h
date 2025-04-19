@@ -2,9 +2,11 @@
 #define GAMEFULL_H
 
 #include "Graphics.h"
-#include "Thief.h"
 #include "House.h"
-#include "Item.h" // Thêm include cho Item
+
+// Forward declaration cho class Thief và Item
+class Thief;
+class Item;
 
 class GameFull {
 public:
@@ -15,6 +17,7 @@ public:
     void handleEvents();
     void update();
     void render();
+    static bool checkCollision(SDL_Rect a, SDL_Rect b);
 
 private:
     Graphics graphics;

@@ -4,12 +4,12 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Item.h"
-#include "House.h" //kiểm tra va chạm với tường và đồ trong nhà
+#include "House.h"
+#include "GameFull.h"
 
 #include <iostream>
 #include <vector>
 using namespace std;
-
 
 class Thief {
 private:
@@ -26,17 +26,23 @@ private:
     bool movingUp = false;
     bool movingDown = false;
     bool facingLeft;
-    SDL_Rect collisionRect;  // Rectangle for collision detection
+    SDL_Rect collisionRect;
+    bool isHoldingItem;
+    Item* heldItem;
 
 public:
     Thief(SDL_Renderer* renderer);
     ~Thief();
     int getCameraX() const { return camera.x; }
     int getCameraY() const { return camera.y; }
-    void handleInput(const SDL_Event& event);
+    void handleInput(const SDL_Event& event, Item* item);
     void update(House& House);
     void render(SDL_Renderer* renderer);
     SDL_Rect getRect() const;
+    bool isHolding() const { return isHoldingItem; }
+    void pickUpItem(Item* item);
+    void dropItem(Item* item); // Cập nhật để kiểm tra droppoint
+    void renderDropPoints(SDL_Renderer* renderer); // Render droppoint
 };
 
 #endif

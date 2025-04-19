@@ -61,21 +61,20 @@
 1741963989 d:\codeblocks\thiefgame\src\characters\thief.h
 	"Character.h"
 
-1745069688 d:\codeblocks\thiefgame\src\gamefull.h
+1745077470 d:\codeblocks\thiefgame\src\gamefull.h
 	"Graphics.h"
-	"Thief.h"
 	"House.h"
-	"Item.h"
 
-1745067503 d:\codeblocks\thiefgame\src\thief.h
+1745077321 d:\codeblocks\thiefgame\src\thief.h
 	<SDL.h>
 	<SDL_image.h>
 	"Item.h"
 	"House.h"
+	"GameFull.h"
 	<iostream>
 	<vector>
 
-1745063522 d:\codeblocks\thiefgame\src\item.h
+1745075512 d:\codeblocks\thiefgame\src\item.h
 	<SDL.h>
 	<SDL_image.h>
 	<vector>
@@ -95,8 +94,10 @@
 	"Blackspot.h"
 	<SDL_image.h>
 
-1745069688 source:d:\codeblocks\thiefgame\src\gamefull.cpp
+1745076386 source:d:\codeblocks\thiefgame\src\gamefull.cpp
 	"GameFull.h"
+	"Thief.h"
+	"Item.h"
 	<iostream>
 	<SDL_image.h>
 	<defs.h>
@@ -106,7 +107,7 @@
 	"defs.h"
 	<iostream>
 
-1745071087 source:d:\codeblocks\thiefgame\src\item.cpp
+1745075512 source:d:\codeblocks\thiefgame\src\item.cpp
 	"Item.h"
 	<iostream>
 	<defs.h>
@@ -115,9 +116,11 @@
 	"Obstacle.h"
 	<SDL_image.h>
 
-1745058355 source:d:\codeblocks\thiefgame\src\thief.cpp
+1745078257 source:d:\codeblocks\thiefgame\src\thief.cpp
 	"Thief.h"
+	"Item.h"
 	"defs.h"
+	"GameFull.h"
 	<vector>
 
 1745071206 d:\codeblocks\thiefgame\src\defs.h
@@ -140,4 +143,10 @@
 
 1745057449 d:\codeblocks\thiefgame\src\house.h
 	<SDL.h>
+
+1745075512 d:\codeblocks\thiefgame\src\gamefull.cpp
+	"GameFull.h"
+	<iostream>
+	<SDL_image.h>
+	<defs.h>
 
