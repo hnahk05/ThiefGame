@@ -2,8 +2,10 @@
 #include <iostream>
 #include <SDL_image.h>
 #include <defs.h>
+#include "DropPoint.h"
+#include <vector>
 using namespace std;
-
+DropPointManager dropPointManager;
 GameFull::GameFull() : running(true), gameStarted(false), dogAlert(0),
                       startScreenTexture(nullptr), playButtonTexture(nullptr) {
     if (graphics.init()) {
@@ -55,13 +57,15 @@ bool GameFull::init() {
         buttonHeight
     };
 
-    // Initialize droppoints at specific coordinates
-    /*dropPoints.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
-    dropPoints.emplace_back(graphics.getRenderer(), 1460, 430, ITEM_ALCOHOL);
-    dropPoints.emplace_back(graphics.getRenderer(), 1740, 1150, ITEM_CLOCK);
-    dropPoints.emplace_back(graphics.getRenderer(), 1383, 1166, ITEM_COMPUTER);
-    dropPoints.emplace_back(graphics.getRenderer(), 564, 468, ITEM_PHONE);
-
+    vector<string> paths = {
+        "assets/droppoint/alcoholground.png",
+        "assets/droppoint/clockground.png",
+        "assets/droppoint/computerground.png",
+        "assets/droppoint/moneyground.png",
+        "assets/droppoint/phoneground.png"
+    };
+    dropPointManager.loadImages(graphics.getRenderer(), paths);
+/*
     // Initialize items at the same positions
     items.emplace_back(graphics.getRenderer(), 1000, 1300, ITEM_MONEY);
     items.emplace_back(graphics.getRenderer(), 1460, 430, ITEM_ALCOHOL);
@@ -95,11 +99,14 @@ void GameFull::render() {
         SCREEN_HEIGHT
     };
 
+    dropPointManager.render(graphics.getRenderer(), camera);
+
     // Vẽ tên trộm
     thief->render(graphics.getRenderer());
 
     // Vẽ thanh tiếng ồn
     graphics.drawNoiseBar(graphics.getRenderer());
+
 
     // Hiển thị ra màn hình
     graphics.present();
