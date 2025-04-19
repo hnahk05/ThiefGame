@@ -4,14 +4,10 @@
 
 House::House() {
     maskSurface = IMG_Load("assets/maskground.png");
-    if (!maskSurface) {
-        SDL_Log("Failed to load collision mask: %s", IMG_GetError());
-    }
-
 }
 
 House::~House() {
-    SDL_FreeSurface(maskSurface);
+    if (maskSurface) SDL_FreeSurface(maskSurface);
 }
 
 Uint32 House::getPixel(int x, int y) {
@@ -38,5 +34,5 @@ bool House::isColliding(int x, int y) {
     Uint8 r, g, b;
     SDL_GetRGB(pixel, maskSurface->format, &r, &g, &b);
 
-    return (r != 255 && g != 255 && b != 255);  // không phải màu trắng là va chạm
+    return (r != 255 && g != 255 && b != 255);  // Không phải màu trắng là va chạm
 }

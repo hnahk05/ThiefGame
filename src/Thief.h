@@ -14,7 +14,8 @@ using namespace std;
 class Thief {
 private:
     SDL_Texture* texture;
-    SDL_Texture* foregroundTexture;  // New foreground texture
+    SDL_Texture* foregroundTexture;
+    SDL_Texture* ATexture; SDL_Texture* BTexture; SDL_Texture* CTexture; SDL_Texture* DTexture; SDL_Texture* ETexture;
     SDL_Rect srcRect, dstRect;
     SDL_Rect camera;
     SDL_Renderer* renderer;

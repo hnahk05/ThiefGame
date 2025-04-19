@@ -11,20 +11,11 @@ Graphics::~Graphics() {
 }
 
 bool Graphics::init() {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) return false;
     window = SDL_CreateWindow("Thief Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (!window) {
-        std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
+    if (!window) return false;
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!renderer) {
-        std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
+    if (!renderer) return false;
     return true;
 }
 

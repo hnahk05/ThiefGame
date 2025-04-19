@@ -8,27 +8,43 @@ SDL_Texture* backgroundTexture = nullptr;
 Thief::Thief(SDL_Renderer* renderer)
     : renderer(renderer), frameIndex(0), frameDelay(0),
       movingLeft(false), movingRight(false), movingUp(false), movingDown(false),
-      facingLeft(false), texture(nullptr), foregroundTexture(nullptr) {
+      facingLeft(false), texture(nullptr), foregroundTexture(nullptr),
+      ATexture(nullptr), BTexture(nullptr), CTexture(nullptr), DTexture(nullptr), ETexture(nullptr) {
 
     camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
     SDL_Surface* bgSurface = IMG_Load("assets/background.png");
     SDL_Surface* fgSurface = IMG_Load("assets/foreground.png");
+    //load các ảnh droppoint
+    SDL_Surface* A = IMG_Load("assets/alcoholground.png");
+    SDL_Surface* B = IMG_Load("assets/computerground.png");
+    SDL_Surface* C = IMG_Load("assets/clockground.png");
+    SDL_Surface* D = IMG_Load("assets/moneyground.png");
+    SDL_Surface* E = IMG_Load("assets/phoneground.png");
+
     SDL_Surface* loadedSurface = IMG_Load("assets/Thief.png");
-    if (!loadedSurface || !bgSurface || !fgSurface) {
-        return;
-    }
+    if (!loadedSurface || !bgSurface || !fgSurface || !A || !B || !C || !D || !E) return;
 
     texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
     backgroundTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
     foregroundTexture = SDL_CreateTextureFromSurface(renderer, fgSurface);
+    ATexture = SDL_CreateTextureFromSurface(renderer, A);
+    BTexture = SDL_CreateTextureFromSurface(renderer, B);
+    CTexture = SDL_CreateTextureFromSurface(renderer, C);
+    DTexture = SDL_CreateTextureFromSurface(renderer, D);
+    ETexture = SDL_CreateTextureFromSurface(renderer, E);
+
+
     SDL_FreeSurface(loadedSurface);
     SDL_FreeSurface(bgSurface);
     SDL_FreeSurface(fgSurface);
+    SDL_FreeSurface(A);
+    SDL_FreeSurface(B);
+    SDL_FreeSurface(C);
+    SDL_FreeSurface(D);
+    SDL_FreeSurface(E);
 
-    if (!texture || !backgroundTexture || !foregroundTexture) {
-        return;
-    }
+    if (!texture || !backgroundTexture || !foregroundTexture || !ATexture || !BTexture || !CTexture || !DTexture || !ETexture) return;
 
     srcRect = {0, 0, FRAME_WIDTH, FRAME_HEIGHT};
 
@@ -49,12 +65,13 @@ Thief::Thief(SDL_Renderer* renderer)
 }
 
 Thief::~Thief() {
-    if (texture) {
-        SDL_DestroyTexture(texture);
-    }
-    if (foregroundTexture) {
-        SDL_DestroyTexture(foregroundTexture);
-    }
+    if (texture) SDL_DestroyTexture(texture);
+    if (foregroundTexture) SDL_DestroyTexture(foregroundTexture);
+    if (ATexture) SDL_DestroyTexture(ATexture);
+    if (BTexture) SDL_DestroyTexture(BTexture);
+    if (CTexture) SDL_DestroyTexture(CTexture);
+    if (DTexture) SDL_DestroyTexture(DTexture);
+    if (ETexture) SDL_DestroyTexture(ETexture);
 }
 
 void Thief::handleInput(const SDL_Event& event) {
@@ -138,7 +155,7 @@ void Thief::update(House& house) {
         nextPos.h - (2 * COLLISION_OFFSET_Y)
     };
 
-    // === Kiểm tra va chạm bằng mask ===
+    // Kiểm tra va chạm bằng mask
     bool isColliding = false;
 
     // Kiểm tra va chạm theo viền khung chữ nhật
@@ -170,9 +187,7 @@ void Thief::update(House& house) {
 }
 
 void Thief::render(SDL_Renderer* renderer) {
-    if (!texture || !backgroundTexture || !foregroundTexture) {
-        return;
-    }
+    if (!texture || !backgroundTexture || !foregroundTexture || !ATexture || !BTexture || !CTexture || !DTexture || !ETexture) return;
 
     // Draw background
     SDL_Rect bgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
@@ -192,6 +207,18 @@ void Thief::render(SDL_Renderer* renderer) {
     // Draw foreground
     SDL_Rect fgRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
     SDL_RenderCopy(renderer, foregroundTexture, &fgRect, NULL);
+
+    //DrawABCDE
+    SDL_Rect ARect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_RenderCopy(renderer, ATexture, &ARect, NULL);
+    SDL_Rect BRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_RenderCopy(renderer, BTexture, &BRect, NULL);
+    SDL_Rect CRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_RenderCopy(renderer, CTexture, &CRect, NULL);
+    SDL_Rect DRect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_RenderCopy(renderer, DTexture, &DRect, NULL);
+    SDL_Rect ERect = { camera.x, camera.y, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_RenderCopy(renderer, ETexture, &ERect, NULL);
 
 }
 
