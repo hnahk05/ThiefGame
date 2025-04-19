@@ -10,8 +10,8 @@ SDL_Texture* backgroundTexture = nullptr;
 // Định nghĩa tọa độ và kích thước cho droppoint (vùng va chạm)
 const SDL_Rect dropPointRects[5] = {
     {965, 357, 211, 269}, // alcohol
-    {1350, 1128, 152, 265}, // computer
-    {1726, 1100, 126, 225}, // clock
+    {1726, 1100, 126, 225}, // computer
+    {1350, 1207, 252, 165}, // clock
     {935, 1211, 264, 224}, // money
     {493, 458, 149, 229}  // phone
 };
@@ -149,8 +149,8 @@ void Thief::dropItem(Item* item) {
                     // Xóa texture của droppoint
                     switch (i) {
                         case 0: SDL_DestroyTexture(ATexture); ATexture = nullptr; break;
-                        case 1: SDL_DestroyTexture(BTexture); BTexture = nullptr; break;
-                        case 2: SDL_DestroyTexture(CTexture); CTexture = nullptr; break;
+                        case 2: SDL_DestroyTexture(BTexture); BTexture = nullptr; break;
+                        case 1: SDL_DestroyTexture(CTexture); CTexture = nullptr; break;
                         case 3: SDL_DestroyTexture(DTexture); DTexture = nullptr; break;
                         case 4: SDL_DestroyTexture(ETexture); ETexture = nullptr; break;
                     }
