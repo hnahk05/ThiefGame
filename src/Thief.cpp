@@ -142,25 +142,21 @@ void Thief::dropItem(Item* item) {
         for (int i = 0; i < 5; ++i) {
             if (GameFull::checkCollision(getRect(), dropPointRects[i])) {
                 if (itemIndex == i) {
-                    // Đúng droppoint: đặt item tại trung tâm droppoint
                     int centerX = dropPointRects[i].x + dropPointRects[i].w / 2 - ITEM_SIZE / 2;
                     int centerY = dropPointRects[i].y + dropPointRects[i].h / 2 - ITEM_SIZE / 2;
                     heldItem->drop(centerX, centerY);
-                    // Xóa texture của droppoint
                     switch (i) {
-                        case 0: SDL_DestroyTexture(ATexture); ATexture = nullptr; break; // alcohol
-                        case 2: SDL_DestroyTexture(BTexture); BTexture = nullptr; break; // computer
-                        case 1: SDL_DestroyTexture(CTexture); CTexture = nullptr; break; // clock
-                        case 3: SDL_DestroyTexture(DTexture); DTexture = nullptr; break; // money
-                        case 4: SDL_DestroyTexture(ETexture); ETexture = nullptr; break; // phone
+                        case 0: SDL_DestroyTexture(ATexture); ATexture = nullptr; break;
+                        case 2: SDL_DestroyTexture(BTexture); BTexture = nullptr; break;
+                        case 1: SDL_DestroyTexture(CTexture); CTexture = nullptr; break;
+                        case 3: SDL_DestroyTexture(DTexture); DTexture = nullptr; break;
+                        case 4: SDL_DestroyTexture(ETexture); ETexture = nullptr; break;
                     }
-                    dropped = true; // Đặt thành true để item được thả
-                    // Gọi collectItem của GameFull
+                    dropped = true;
                     if (game) {
                         game->collectItem();
                     }
                 } else {
-                    // Sai droppoint: tăng noiseLevel
                     noiseLevel += 10;
                     if (noiseLevel > 100) noiseLevel = 100;
                 }

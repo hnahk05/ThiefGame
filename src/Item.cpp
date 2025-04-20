@@ -58,6 +58,11 @@ void Item::spawnItem() {
         }
     }
 
+    if (allSpawned) {
+        currentItemIndex = -1; // Không sinh thêm vật phẩm
+        return;
+    }
+
     int itemIndex;
     do {
         itemIndex = rand() % 5;

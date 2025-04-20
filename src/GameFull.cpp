@@ -99,7 +99,7 @@ void GameFull::renderEndScreen() {
     SDL_RenderClear(graphics.getRenderer());
     if (noiseLevel >= 100 && itemsDelivered < 5) {
         SDL_RenderCopy(graphics.getRenderer(), loseScreenTexture, NULL, NULL);
-    } else if (itemsDelivered >= 5 && noiseLevel < 100) {
+    } else if (itemsDelivered >= 5 && noiseLevel <= 100) {
         SDL_RenderCopy(graphics.getRenderer(), winScreenTexture, NULL, NULL);
     }
     SDL_RenderPresent(graphics.getRenderer());
@@ -180,7 +180,7 @@ void GameFull::collectItem() {
 void GameFull::update() {
     if (gameStarted && !gameEnded) {
         thief->update(house);
-        if (noiseLevel >= 100 || itemsDelivered >= 5) {
+        if (itemsDelivered >= 5 || noiseLevel >= 100) {
             gameEnded = true;
         }
     }
