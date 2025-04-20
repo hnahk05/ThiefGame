@@ -3,6 +3,7 @@
 
 #include "Graphics.h"
 #include "House.h"
+#include <SDL_mixer.h>
 
 // Forward declaration cho class Thief và Item
 class Thief;
@@ -35,7 +36,8 @@ private:
     SDL_Texture* loseScreenTexture;
     SDL_Texture* winScreenTexture;
     SDL_Rect playButtonRect;
-
+    Mix_Music* backgroundMusic;
+    Mix_Chunk* memeSound;
     void renderStartScreen();
     void renderEndScreen();
     bool isPointInRect(int x, int y, const SDL_Rect& rect);

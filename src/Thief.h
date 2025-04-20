@@ -6,7 +6,7 @@
 #include "Item.h"
 #include "House.h"
 #include "GameFull.h"
-
+#include <SDL_mixer.h>
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -29,7 +29,7 @@ private:
     SDL_Rect collisionRect;
     bool isHoldingItem;
     Item* heldItem;
-    GameFull* game; // Con trỏ đến GameFull
+    GameFull* game;
 
 public:
     Thief(SDL_Renderer* renderer, GameFull* gameFull);

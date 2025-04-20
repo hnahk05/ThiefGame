@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SDL_image.h>
 #include <defs.h>
+#include <SDL_mixer.h>
 using namespace std;
 
 extern int noiseLevel;
@@ -12,7 +13,7 @@ GameFull::GameFull() : graphics(), thief(nullptr), items(nullptr), house(),
                        running(true), gameStarted(false), gameEnded(false),
                        itemsDelivered(0), startScreenTexture(nullptr),
                        playButtonTexture(nullptr), loseScreenTexture(nullptr),
-                       winScreenTexture(nullptr) {
+                       winScreenTexture(nullptr), memeSound(nullptr) {
     if (graphics.init()) {
         thief = new Thief(graphics.getRenderer(), this);
         items = new Item(graphics.getRenderer(), FIXED_X, FIXED_Y);
@@ -45,6 +46,15 @@ GameFull::~GameFull() {
         SDL_DestroyTexture(winScreenTexture);
         winScreenTexture = nullptr;
     }
+    if (backgroundMusic) {
+        Mix_FreeMusic(backgroundMusic);
+        backgroundMusic = nullptr;
+    }
+    if (memeSound) {
+        Mix_FreeChunk(memeSound);
+        memeSound = nullptr;
+    }
+    Mix_CloseAudio();
 }
 
 bool GameFull::isPointInRect(int x, int y, const SDL_Rect& rect) {
@@ -54,6 +64,14 @@ bool GameFull::isPointInRect(int x, int y, const SDL_Rect& rect) {
 
 bool GameFull::init() {
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) return false;
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) return false;
+    Mix_AllocateChannels(16);
+    backgroundMusic = Mix_LoadMUS("audio/background_music.mp3");
+    if (!backgroundMusic) return false;
+    memeSound = Mix_LoadWAV("audio/ughhh.wav");
+    if (!memeSound) return false;
+    if (Mix_PlayMusic(backgroundMusic, -1) == -1) return false;
 
     SDL_Surface* startSurface = IMG_Load("assets/start.jpg");
     if (!startSurface) return false;

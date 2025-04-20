@@ -228,8 +228,8 @@ void Thief::update(House& house) {
         for (int y = nextCollisionRect.y; y < nextCollisionRect.y + nextCollisionRect.h; ++y) {
             if (house.isColliding(nextCollisionRect.x, y) ||
                 house.isColliding(nextCollisionRect.x + nextCollisionRect.w - 1, y)) {
-                isColliding = true;
-                break;
+                    isColliding = true;
+                    break;
             }
         }
     }
