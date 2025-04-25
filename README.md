@@ -22,13 +22,7 @@ ThiefGame là 1 game thuộc dạng "hoán đổi vai trò". Thay vì bạn sẽ
 - Bước 1: Chọn Code -> Download Zip (6,6MB)
 ![Ảnh minh họa](https://i.imgur.com/VTwS6rc.png)
 ![Ảnh minh họa](https://i.imgur.com/mRiuSH9.png)
-- Bước 2: Cài mingw. Ở đây tôi cài đặt phiên bản MinGW-W64 GCC-8.1.0 [x86_64-posix-seh](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z/download)  
-Một số chú ý:  
-  Nếu sử dụng trình biên dịch khác thì phải dịch lại icon: vào thư mục icon rồi dùng lệnh windres main.rc -O coff main.res trong cmd.
-  Phải xóa ba dll của c++ trong thư mục chứa pvz.exe: libgcc_s_seh-1.dll, libstdc++-6.dll, libwinpthread-1.dll. Ba dll này chỉ dành cho người chơi không cài sẵn c++ trong máy. 
-- Bước 3: Cài GNU make
-- Bước 4: Mở cmd trong thư mục chứa makefile và gõ lệnh make.
-- Bước 5: Bật pvz.exe và chơi
+- Bước 2: Bật ProjectTest.exe và chơi
 ## BẮT ĐẦU GAME
 ![màn_hình_bắt_đầu](https://i.imgur.com/1ZkP8TF.png)  
 Để bắt đầu chơi, click chuột vào "START", giảm âm lượng nếu nhạc nền quá lớn. 
