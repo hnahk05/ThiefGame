@@ -49,7 +49,7 @@ Item::~Item() {
     if (Item5Texture) SDL_DestroyTexture(Item5Texture);
 }
 
-void Item::spawnItem() {
+void Item::spawnItem() { //sinh ngau nhien 1 vat pham
     bool allSpawned = true;
     for (bool spawned : itemSpawned) {
         if (!spawned) {
@@ -74,11 +74,11 @@ void Item::spawnItem() {
     pickedUp = false;
 }
 
-void Item::pickUp() {
+void Item::pickUp() { //danh dau vat pham da nhat
     pickedUp = true;
 }
 
-void Item::drop(int x, int y) {
+void Item::drop(int x, int y) { //tha vat pham tai x, y
     pickedUp = false;
     position.x = x;
     position.y = y;
