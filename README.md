@@ -17,12 +17,13 @@ ThiefGame là 1 game thuộc dạng "hoán đổi vai trò". Thay vì bạn sẽ
 
 
 ## CÁCH TẢI GAME
-1. KHÔNG BAO GỒM CODE: 
-Game được nén thành file zip tại link sau: https://github.com/hnahk05/ThiefGame/releases/tag/v1.0
-Cách này giúp tiết kiệm bộ nhớ và thời gian tải vì sau khi giải nén chỉ chiếm khoảng 10.1MB.
-Cách thực hiện: Tải về, giải nén và chọn ProjectTest.exe để chơi.  
+1. KHÔNG BAO GỒM CODE: Cách này giúp tiết kiệm bộ nhớ và thời gian tải vì sau khi giải nén chỉ chiếm khoảng 10MB.  
+- Game được nén thành file zip tại link sau: (https://github.com/hnahk05/ThiefGame/releases/tag/game_nocode)
+- Cách thực hiện: Tải về, giải nén và chọn ProjectTest.exe để chơi.  
 2. BAO GỒM CODE - CÓ THỂ BIÊN DỊCH:
-- Bước 1: Chọn Code -> Download Zip (6,6MB) ![Ảnh minh họa](https://drive.google.com/uc?export=view&id=1sJYtbrb1T_ofHY2IuxlIrgZtrBgEcQ)
+- Bước 1: Chọn Code -> Download Zip (6,6MB)
+![Ảnh minh họa](https://i.imgur.com/VTwS6rc.png)
+![Ảnh minh họa](https://i.imgur.com/mRiuSH9.png)
 - 
 ...
 ## BẮT ĐẦU GAME
