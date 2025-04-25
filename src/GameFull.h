@@ -5,7 +5,6 @@
 #include "House.h"
 #include <SDL_mixer.h>
 
-// Forward declaration cho class Thief và Item
 class Thief;
 class Item;
 
@@ -15,7 +14,7 @@ public:
     ~GameFull();
     bool init();
     void run();
-    void handleEvents();
+    void handleEvents(); //xu li thao tac ban phim, chuot
     void update();
     void render();
     static bool checkCollision(SDL_Rect a, SDL_Rect b);
@@ -23,14 +22,17 @@ public:
     void collectItem(); // Hàm để tăng itemsDelivered
 
 private:
+    //thanh phan chinh
     Graphics graphics;
     Thief* thief;
     Item* items;
     House house;
+    //trang thai game
     bool running;
     bool gameStarted;
     bool gameEnded;
     int itemsDelivered;
+    //do hoa, am thanh
     SDL_Texture* startScreenTexture;
     SDL_Texture* playButtonTexture;
     SDL_Texture* loseScreenTexture;
@@ -38,6 +40,7 @@ private:
     SDL_Rect playButtonRect;
     Mix_Music* backgroundMusic;
     Mix_Chunk* memeSound;
+    //man hinh bat dau, ket thuc
     void renderStartScreen();
     void renderEndScreen();
     bool isPointInRect(int x, int y, const SDL_Rect& rect);
