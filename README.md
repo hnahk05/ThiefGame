@@ -1,5 +1,5 @@
 # ThiefGame
-- [Thử nghiệm game](HTTP)
+- [Thử nghiệm game](https://drive.google.com/file/d/1ZT0dikVM6xklZ4AU085tSgMDWoH_w_2J/view?usp=sharing)
 # Giới thiệu Game:
 ThiefGame là 1 game thuộc dạng "hoán đổi vai trò". Thay vì bạn sẽ đóng vai là kẻ trộm và đi trộm đồ như thông thường thì bây giờ bạn sẽ là một tên trộm hoàn lương, đem những món mà mình đã trộm đi trả lại vào đúng vị trí cho chủ nhà, sao cho chủ nhà (và con chó) không phát hiện ra bạn. Nếu không, trò chơi sẽ kết thúc và bạn bị bắt. Lúc đó sẽ không còn cơ hội để bạn hoàn lương.   
   
