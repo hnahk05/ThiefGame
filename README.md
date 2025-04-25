@@ -33,17 +33,17 @@ Một số chú ý:
 ![màn_hình_bắt_đầu](https://i.imgur.com/1ZkP8TF.png)  
 Để bắt đầu chơi, click chuột vào "START", giảm âm lượng nếu nhạc nền quá lớn. 
 ## CÁC THÀNH PHẦN TRONG GAME
-- Nhân vật trong game: Tên trộm mà bạn phải hóa thân thành.
+- Nhân vật trong game: Tên trộm mà bạn phải hóa thân thành.  
 ![tên trộm](https://i.imgur.com/lf3OELP.png)  
 - Background (căn nhà mà trộm "hành nghề" tại đó): 
-![sơ đồ căn nhà](https://i.imgur.com/p6Y66Qw.png)
+![sơ đồ căn nhà](https://i.imgur.com/p6Y66Qw.png)  
 - Các items: những đồ vật mà nhân vật phải đem đi trả lại:  
 ![chai rượu](https://i.imgur.com/GLNEkB2.png) chai rượu  
 ![điện thoại](https://i.imgur.com/4dnmYOb.png) điện thoại  
 ![máy tính bàn](https://i.imgur.com/2TEWbvI.png) máy tính bàn  
 ![đồng hồ đeo tay](https://i.imgur.com/aNO2z68.png) đồng hồ đeo tay  
-![túi tiền](https://i.imgur.com/0D4S9Wo.png) túi tiền
-- Thanh noise: thanh tiếng động, khi bạn chạm vào đồ vật không liên quan thì thanh này sẽ đầy.
+![túi tiền](https://i.imgur.com/0D4S9Wo.png) túi tiền  
+- Thanh noise: thanh tiếng động, khi bạn chạm vào đồ vật không liên quan thì thanh này sẽ đầy.  
 ![noise](https://i.imgur.com/k4kNPP0.png) thanh noise ban đầu  
 ![noise](https://i.imgur.com/REZ568B.png) thanh noise khi bạn đã va chạm
 ## CÁCH CHƠI
@@ -52,9 +52,9 @@ Lấy đồ từ xe tải và đem nó về các điểm trả đồ trong căn 
 - Sau đó, đem những đồ vật tương ứng với hình ảnh đem trả tại các điểm trả đồ. Nếu bạn trả không đúng thì thanh noise sẽ tăng, nếu đúng thì điểm trả đồ đó sẽ biến mất, bạn cũng không còn cầm item đó nữa.  
 - Sau khi kết thúc game, bấm "E" để chơi lại.
 ## CHIẾN THẮNG VÀ THẤT BẠI
-- Bạn sẽ chiến thắng nếu trả hết đồ đạc trong nhà mà không bị chủ nhà phát hiện.
+- Bạn sẽ chiến thắng nếu trả hết đồ đạc trong nhà mà không bị chủ nhà phát hiện.  
 ![chiến thắng](https://i.imgur.com/Ih382Vi.jpeg)  
-- Bạn sẽ thất bại khi thanh noise đầy, bạn đã bị phát hiện.
+- Bạn sẽ thất bại khi thanh noise đầy, bạn đã bị phát hiện.  
 ![thất bại](https://i.imgur.com/xgjiF3b.jpeg)
 ## ĐỒ HỌA
 Background căn nhà: [Eden Eldersong Facebook](https://www.facebook.com/photo.php?fbid=287421350458352&set=pb.100075714660560.-2207520000&type=3)  
