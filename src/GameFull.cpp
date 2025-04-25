@@ -21,7 +21,7 @@ GameFull::GameFull() : graphics(), thief(nullptr), items(nullptr), house(),
     }
 }
 
-GameFull::~GameFull() {
+GameFull::~GameFull() { //giai phong bo nho
     if (thief) {
         delete thief;
         thief = nullptr;
@@ -64,7 +64,7 @@ bool GameFull::isPointInRect(int x, int y, const SDL_Rect& rect) {
 
 bool GameFull::init() {
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) return false;
-
+    
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) return false;
     Mix_AllocateChannels(16);
     backgroundMusic = Mix_LoadMUS("audio/background_music.mp3");
@@ -96,7 +96,7 @@ bool GameFull::init() {
     winScreenTexture = SDL_CreateTextureFromSurface(graphics.getRenderer(), winSurface);
     SDL_FreeSurface(winSurface);
     if (!winScreenTexture) return false;
-
+    //vi tri cua nut play
     playButtonRect = {
         (SCREEN_WIDTH - buttonWidth) / 2,
         (SCREEN_HEIGHT - buttonHeight) / 2,
@@ -148,16 +148,16 @@ void GameFull::handleEvents() {
         if (event.type == SDL_QUIT) {
             running = false;
         }
-        if (!gameStarted) {
+        if (!gameStarted) { //xu li click chuot vao nut play
             if (event.type == SDL_MOUSEBUTTONDOWN) {
                 int mouseX, mouseY;
                 SDL_GetMouseState(&mouseX, &mouseY);
                 if (isPointInRect(mouseX, mouseY, playButtonRect)) {
-                    gameStarted = true;
+                    gameStarted = true; 
                 }
             }
         } else if (gameEnded) {
-            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_e) { //nhan phim e de restart
                 resetGame();
             }
         } else {
@@ -190,7 +190,7 @@ void GameFull::resetGame() {
     }
 }
 
-void GameFull::collectItem() {
+void GameFull::collectItem() { 
     itemsDelivered++;
     cout << "Items Delivered: " << itemsDelivered << endl; // In ra console
 }
